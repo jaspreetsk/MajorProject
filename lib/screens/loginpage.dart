@@ -1,11 +1,26 @@
 import 'package:academiax/constants/pallet.dart';
-import 'package:academiax/screens/hod_home_screen.dart';
 import 'package:academiax/screens/student_home_screen.dart';
+import 'package:academiax/screens/welcome_page_screen.dart';
 import 'package:academiax/wigets/textfield.dart';
 import 'package:flutter/material.dart';
 
-class Loginpage extends StatelessWidget {
+class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
+
+  @override
+  State<Loginpage> createState() => _LoginpageState();
+}
+
+class _LoginpageState extends State<Loginpage> {
+  final TextEditingController emailIDController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailIDController.dispose();
+    passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +35,14 @@ class Loginpage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => WelcomePage()),
+              );
+            },
+            icon: Icon(Icons.arrow_back)),
       ),
       body: Center(
         child: Column(
@@ -57,7 +80,9 @@ class Loginpage extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            TextFieldArea(),
+            TextFieldArea(
+              textFieldController: emailIDController,
+            ),
             const SizedBox(
               height: 30,
             ),
@@ -79,14 +104,16 @@ class Loginpage extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            TextFieldArea(),
+            TextFieldArea(
+              textFieldController: passwordController,
+            ),
             const SizedBox(
               height: 60,
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => StudentHomeScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => StudentHomeScreen()));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,

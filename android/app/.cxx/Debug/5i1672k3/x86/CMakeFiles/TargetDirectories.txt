@@ -1,0 +1,2 @@
+C:/Users/jaspr/Desktop/Major Project/academiax/android/app/.cxx/Debug/5i1672k3/x86/CMakeFiles/edit_cache.dir
+C:/Users/jaspr/Desktop/Major Project/academiax/android/app/.cxx/Debug/5i1672k3/x86/CMakeFiles/rebuild_cache.dir

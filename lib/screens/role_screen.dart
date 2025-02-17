@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:academiax/constants/pallet.dart';
 import 'package:academiax/screens/hod_create_account.dart';
 import 'package:academiax/screens/student_create_account.dart';

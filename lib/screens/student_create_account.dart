@@ -1,6 +1,9 @@
 import 'package:academiax/constants/pallet.dart';
+import 'package:academiax/firebase_authentication/firebase_auth.dart';
+import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/wigets/textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentCreateAccount extends StatefulWidget {
@@ -11,8 +14,58 @@ class StudentCreateAccount extends StatefulWidget {
 }
 
 class _StudentCreateAccountState extends State<StudentCreateAccount> {
+// for instantiating our FirebaseAuthMethods() created in firebase_auth.dart
+
+  final _auth = FirebaseAuthMethods();
+
+// variables holding values of our dropdown menus of department and club section.
+
   String? selectedValueDepartment;
   String? selectedValueClub;
+
+// controllers for manipulating/holding data for custom TextFieldArea() created in textfield.dart
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailIDController = TextEditingController();
+  final TextEditingController phonenumberController = TextEditingController();
+  final TextEditingController enrollmentNoController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController currentYearController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+// to dispose off texteditingcontrollers after their work is done.
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    nameController.dispose();
+    emailIDController.dispose();
+    phonenumberController.dispose();
+    enrollmentNoController.dispose();
+    dobController.dispose();
+    currentYearController.dispose();
+    passwordController.dispose();
+  }
+
+  // the following function will be called when clicked on
+  // the 'Create Account' button.
+
+  void _signup() async {
+    final user = await _auth.signupWithEmailandPassword(
+      email: emailIDController.text,
+      password: passwordController.text,
+      context: context,
+    );
+    if (mounted) {
+      if (user != null) {
+        showSnackBar(context, "The student's account is created successfully");
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => Loginpage()));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +110,9 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: nameController,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -78,7 +133,9 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: enrollmentNoController,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -99,7 +156,9 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: emailIDController,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -120,7 +179,9 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: phonenumberController,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -207,7 +268,9 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: dobController,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -228,7 +291,9 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: currentYearController,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -309,15 +374,14 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(),
+              TextFieldArea(
+                textFieldController: passwordController,
+              ),
               const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Loginpage()));
-                },
+                onPressed: _signup,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Pallet.buttonColor,
                   minimumSize: const Size(200, 60),
