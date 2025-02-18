@@ -3,6 +3,7 @@ import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/wigets/textfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,52 @@ class _HODCreateAccountState extends State<HODCreateAccount> {
 // variables holding values of our dropdown menus of department
 
   String? selectedValueDepartment;
+
+  // firestore collection
+
+  CollectionReference hods =
+      FirebaseFirestore.instance.collection('Heads of Departments');
+
+// function to check if email already exists on the database
+
+  Future<bool> emailAlreadyExists(String email) async {
+    final db = FirebaseFirestore.instance;
+    final QuerySnapshot = await db
+        .collection("Heads of Departments")
+        .where("email ID", isEqualTo: emailIDController.text)
+        .limit(1)
+        .get();
+
+    return QuerySnapshot.docs.isNotEmpty;
+  }
+
+  // function created to store hod's create account data in firestore database
+
+  void userFireStoredb() async {
+    if (await emailAlreadyExists(emailIDController.text) == false) {
+      try {
+        _signup(); // for firebase auth
+        await hods // for firebase firestore database
+            .add({
+          'name': nameController.text,
+          'email ID': emailIDController.text,
+          'phone number': phonenumberController.text,
+          'faculty ID': facultyIDController.text,
+          'department': selectedValueDepartment,
+        });
+        showSnackBar(context, "HOD's account created");
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => Loginpage()));
+      } on FirebaseException catch (e) {
+        showSnackBar(context, e.message!);
+      } catch (error) {
+        showSnackBar(context, "Failed to create an account: $error");
+        print("Error during account creation: $error");
+      }
+    } else {
+      showSnackBar(context, "Email already exists :(");
+    }
+  }
 
 // controllers for manipulating/holding data for custom TextFieldArea() created in textfield.dart
 
@@ -47,18 +94,11 @@ class _HODCreateAccountState extends State<HODCreateAccount> {
   // the 'Create Account' button.
 
   void _signup() async {
-    final user = await _auth.signupWithEmailandPassword(
+    await _auth.signupWithEmailandPassword(
       email: emailIDController.text,
       password: passwordController.text,
       context: context,
     );
-    if (mounted) {
-      if (user != null) {
-        showSnackBar(context, "The HOD's account is created successfully");
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Loginpage()));
-      }
-    }
   }
 
   @override
@@ -268,7 +308,7 @@ class _HODCreateAccountState extends State<HODCreateAccount> {
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: _signup,
+                onPressed: userFireStoredb,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Pallet.buttonColor,
                   minimumSize: const Size(200, 60),

@@ -35,7 +35,7 @@ class FirebaseAuthMethods {
 
       //await sendEmailVerification(context);
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!);
+      debugPrint(e.message!);
     }
     return null;
   }

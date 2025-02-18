@@ -32,13 +32,56 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   final TextEditingController emailIDController = TextEditingController();
   final TextEditingController phonenumberController = TextEditingController();
   final TextEditingController enrollmentNoController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   // firestore collection
 
-  // CollectionReference students =
-  // FirebaseFirestore.instance.collection('Students');
+  CollectionReference students =
+      FirebaseFirestore.instance.collection('Students');
+
+// function to check if email already exists on the database
+
+  Future<bool> emailAlreadyExists(String email) async {
+    final db = FirebaseFirestore.instance;
+    final QuerySnapshot = await db
+        .collection("Students")
+        .where("email ID", isEqualTo: emailIDController.text)
+        .limit(1)
+        .get();
+
+    return QuerySnapshot.docs.isNotEmpty;
+  }
+
+  // function created to store student's create account data in firestore database
+
+  void userFireStoredb() async {
+    if (await emailAlreadyExists(emailIDController.text) == false) {
+      try {
+        _signup(); // for firebase auth
+        await students // for firebase firestore database
+            .add({
+          'name': nameController.text,
+          'email ID': emailIDController.text,
+          'phone number': phonenumberController.text,
+          'enrollment number': enrollmentNoController.text,
+          'department': selectedValueDepartment,
+          'club': selectedValueClub,
+          'current academic year': selectedValueYear,
+          'date of birth': _selectedDate,
+        });
+        showSnackBar(context, "Student's account created");
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => Loginpage()));
+      } on FirebaseException catch (e) {
+        showSnackBar(context, e.message!);
+      } catch (error) {
+        showSnackBar(context, "Failed to create an account: $error");
+        print("Error during account creation: $error");
+      }
+    } else {
+      showSnackBar(context, "Email already exists :(");
+    }
+  }
 
 // to dispose off texteditingcontrollers after their work is done.
 
@@ -50,7 +93,6 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
     emailIDController.dispose();
     phonenumberController.dispose();
     enrollmentNoController.dispose();
-    dobController.dispose();
     passwordController.dispose();
   }
 
@@ -58,18 +100,11 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   // the 'Create Account' button.
 
   void _signup() async {
-    final user = await _auth.signupWithEmailandPassword(
+    await _auth.signupWithEmailandPassword(
       email: emailIDController.text,
       password: passwordController.text,
       context: context,
     );
-    if (mounted) {
-      if (user != null) {
-        showSnackBar(context, "The student's account is created successfully");
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => Loginpage()));
-      }
-    }
   }
 
   @override
@@ -453,7 +488,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: _signup,
+                onPressed: userFireStoredb,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Pallet.buttonColor,
                   minimumSize: const Size(200, 60),

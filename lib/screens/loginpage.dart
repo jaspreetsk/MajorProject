@@ -1,7 +1,12 @@
 import 'package:academiax/constants/pallet.dart';
+import 'package:academiax/firebase_authentication/firebase_auth.dart';
+import 'package:academiax/firebase_authentication/show_snack_bar.dart';
+import 'package:academiax/screens/hod_home_screen.dart';
 import 'package:academiax/screens/student_home_screen.dart';
 import 'package:academiax/screens/welcome_page_screen.dart';
 import 'package:academiax/wigets/textfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Loginpage extends StatefulWidget {
@@ -12,14 +17,62 @@ class Loginpage extends StatefulWidget {
 }
 
 class _LoginpageState extends State<Loginpage> {
+  // controllers for manipulating/holding data for custom TextFieldArea() created in textfield.dart
   final TextEditingController emailIDController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // to dispose off texteditingcontrollers after their work is done.
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     emailIDController.dispose();
     passwordController.dispose();
+  }
+
+  void loginUser() async {
+    FirebaseAuthMethods().loginInWithEmailandPassword(
+        email: emailIDController.text,
+        password: passwordController.text,
+        context: context);
+
+    final emailStudent =
+        await emailAlreadyExistsStudent(emailIDController.text);
+
+    final emailHOD = await emailAlreadyExistsHOD(emailIDController.text);
+
+    if (emailStudent) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => StudentHomeScreen()));
+    } else if (emailHOD) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => HodHomeScreen()));
+    } else {
+      showSnackBar(context, "Email not found :(");
+    }
+  }
+
+  Future<bool> emailAlreadyExistsStudent(String email) async {
+    final db = FirebaseFirestore.instance;
+    final QuerySnapshot = await db
+        .collection("Students")
+        .where("email ID", isEqualTo: emailIDController.text)
+        .limit(1)
+        .get();
+
+    return QuerySnapshot.docs.isNotEmpty;
+  }
+
+  Future<bool> emailAlreadyExistsHOD(String email) async {
+    final db = FirebaseFirestore.instance;
+    final QuerySnapshot = await db
+        .collection("Heads of Departments")
+        .where("email ID", isEqualTo: emailIDController.text)
+        .limit(1)
+        .get();
+
+    return QuerySnapshot.docs.isNotEmpty;
   }
 
   @override
@@ -111,10 +164,7 @@ class _LoginpageState extends State<Loginpage> {
               height: 60,
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => StudentHomeScreen()));
-              },
+              onPressed: loginUser,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
                 minimumSize: const Size(200, 60),
