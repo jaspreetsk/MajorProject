@@ -3,7 +3,7 @@ import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/wigets/textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
 class HODCreateAccount extends StatefulWidget {

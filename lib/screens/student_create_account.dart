@@ -3,8 +3,9 @@ import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/wigets/textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class StudentCreateAccount extends StatefulWidget {
   const StudentCreateAccount({super.key});
@@ -22,6 +23,8 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
 
   String? selectedValueDepartment;
   String? selectedValueClub;
+  int? selectedValueYear;
+  DateTime? _selectedDate;
 
 // controllers for manipulating/holding data for custom TextFieldArea() created in textfield.dart
 
@@ -30,8 +33,12 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   final TextEditingController phonenumberController = TextEditingController();
   final TextEditingController enrollmentNoController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
-  final TextEditingController currentYearController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // firestore collection
+
+  // CollectionReference students =
+  // FirebaseFirestore.instance.collection('Students');
 
 // to dispose off texteditingcontrollers after their work is done.
 
@@ -44,7 +51,6 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
     phonenumberController.dispose();
     enrollmentNoController.dispose();
     dobController.dispose();
-    currentYearController.dispose();
     passwordController.dispose();
   }
 
@@ -258,7 +264,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Text(
-                    "Date of Birth",
+                    "Date of Birth:",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 25,
@@ -268,31 +274,97 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   ),
                 ),
               ),
-              TextFieldArea(
-                textFieldController: dobController,
+              Text(
+                _selectedDate == null
+                    ? 'No date selected'
+                    : 'Selected Date: ${DateFormat('dd-MM-yyyy').format(_selectedDate!)}', // Format the date
+                style: const TextStyle(fontSize: 20),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallet.buttonColor,
+                  minimumSize: const Size(120, 40),
+                ),
+                onPressed: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate ??
+                        DateTime
+                            .now(), // Start with current date or selected date
+                    firstDate: DateTime(1937), // Earliest allowable date
+                    lastDate: DateTime(2101), // Latest allowable date
+                  );
+                  if (picked != null && picked != _selectedDate) {
+                    setState(() {
+                      _selectedDate = picked;
+                    });
+                  }
+                },
+                child: const Text(
+                  'Select Date',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Pallet.textColor,
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
               // current year
 
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Text(
-                    "Current Year",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Pallet.headingColor,
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Current Year:",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Pallet.headingColor,
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      width: 20.0,
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Pallet.headingColor,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                        ),
+                        child: DropdownButton(
+                            dropdownColor:
+                                const Color.fromARGB(255, 211, 195, 132),
+                            isExpanded: true,
+                            hint: Text(
+                              "Select your year",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            value: selectedValueYear,
+                            items: <int>[1, 2, 3, 4]
+                                .map<DropdownMenuItem<int>>((int value) {
+                              return DropdownMenuItem<int>(
+                                  value: value, child: Text(value.toString()));
+                            }).toList(),
+                            onChanged: (int? newValue) {
+                              setState(() {
+                                selectedValueYear = newValue;
+                              });
+                            }),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-              TextFieldArea(
-                textFieldController: currentYearController,
               ),
               const SizedBox(
                 height: 20,
