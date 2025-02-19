@@ -445,6 +445,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                             ),
                             value: selectedValueClub,
                             items: <String>[
+                              "None",
                               "Azure",
                               "AWS cloud foundation",
                               "Arduino",

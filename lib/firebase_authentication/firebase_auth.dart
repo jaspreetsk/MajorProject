@@ -31,6 +31,9 @@ class FirebaseAuthMethods {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+      if (!_auth.currentUser!.emailVerified) {
+        await sendEmailVerification(context);
+      }
       return credential.user;
 
       //await sendEmailVerification(context);

@@ -8,6 +8,7 @@ import 'package:academiax/wigets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
@@ -20,6 +21,8 @@ class _LoginpageState extends State<Loginpage> {
   // controllers for manipulating/holding data for custom TextFieldArea() created in textfield.dart
   final TextEditingController emailIDController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // to dispose off texteditingcontrollers after their work is done.
 
@@ -37,17 +40,35 @@ class _LoginpageState extends State<Loginpage> {
         password: passwordController.text,
         context: context);
 
+    // instance of shared preference created to set the value of isLoggedIn as true when the user logs in.
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+
     final emailStudent =
         await emailAlreadyExistsStudent(emailIDController.text);
 
     final emailHOD = await emailAlreadyExistsHOD(emailIDController.text);
 
     if (emailStudent) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => StudentHomeScreen()));
+      await prefs.setString('userType', 'Students');
+      User? user = _auth.currentUser;
+      if (user != null && user.emailVerified) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => StudentHomeScreen()));
+      } else {
+        showSnackBar(context, "Please verify your email first");
+        // FirebaseAuthMethods().sendEmailVerification(context);
+      }
     } else if (emailHOD) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => HodHomeScreen()));
+      await prefs.setString('userType', 'Heads of Departments');
+      User? user = _auth.currentUser;
+      if (user != null && user.emailVerified) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => HodHomeScreen()));
+      } else {
+        showSnackBar(context, "Please verify your email first");
+        // FirebaseAuthMethods().sendEmailVerification(context);
+      }
     } else {
       showSnackBar(context, "Email not found :(");
     }
@@ -73,6 +94,20 @@ class _LoginpageState extends State<Loginpage> {
         .get();
 
     return QuerySnapshot.docs.isNotEmpty;
+  }
+
+  Future<void> resetPassword() async {
+    String email = emailIDController.text;
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      setState(() {
+        showSnackBar(context, "Check your email: $email to reset the password");
+      });
+    } catch (e) {
+      setState(() {
+        showSnackBar(context, "Failed to send the email please try again");
+      });
+    }
   }
 
   @override
@@ -177,6 +212,19 @@ class _LoginpageState extends State<Loginpage> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 30,
+            ),
+            TextButton(
+                onPressed: resetPassword,
+                child: Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Pallet.headingColor,
+                  ),
+                ))
           ],
         ),
       ),

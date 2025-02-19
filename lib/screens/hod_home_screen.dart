@@ -1,5 +1,8 @@
 import 'package:academiax/constants/pallet.dart';
+import 'package:academiax/firebase_authentication/firebase_auth.dart';
+import 'package:academiax/screens/loginpage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HodHomeScreen extends StatelessWidget {
   const HodHomeScreen({super.key});
@@ -16,6 +19,81 @@ class HodHomeScreen extends StatelessWidget {
             color: Pallet.headingColor,
             fontWeight: FontWeight.bold,
           ),
+        ),
+        leading: Builder(
+          // Use Builder to get context for Scaffold.of
+          builder: (BuildContext appBarContext) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                size: 35,
+                color: Pallet.headingColor,
+              ), // Hamburger icon
+              onPressed: () {
+                Scaffold.of(appBarContext).openDrawer(); // Open drawer
+              },
+              tooltip:
+                  MaterialLocalizations.of(appBarContext).openAppDrawerTooltip,
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        // Add the Drawer here
+        backgroundColor: Pallet.backgroundColor,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Pallet.headingColor,
+              ),
+              child: Text(
+                'App Menu',
+                style: TextStyle(
+                  color: Pallet.backgroundColor,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person_2,
+                size: 25,
+                color: Pallet.headingColor,
+              ),
+              title: Text(
+                'My Profile',
+                style: TextStyle(
+                    color: Pallet.headingColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+                size: 25,
+                color: Pallet.headingColor,
+              ),
+              title: Text(
+                'Logout!',
+                style: TextStyle(
+                    color: Pallet.headingColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25),
+              ),
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('isLoggedIn', false);
+                FirebaseAuthMethods().signout(context);
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => Loginpage()));
+              },
+            ),
+            // Removed Logout ListTile
+          ],
         ),
       ),
       body: Center(
