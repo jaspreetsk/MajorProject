@@ -1,11 +1,79 @@
 import 'package:academiax/constants/pallet.dart';
 import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/screens/loginpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HodHomeScreen extends StatelessWidget {
+class HodHomeScreen extends StatefulWidget {
   const HodHomeScreen({super.key});
+
+  @override
+  State<HodHomeScreen> createState() => _HodHomeScreenState();
+}
+
+class _HodHomeScreenState extends State<HodHomeScreen> {
+  String hODName = 'Loading Name...'; // Initial loading state for name
+  String departmentName =
+      'Loading Department...'; // Initial loading state for enrollment
+  bool isLoading = true; // To indicate loading state
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStudentData(); // Fetch student data when the screen initializes
+  }
+
+  Future<void> _loadStudentData() async {
+    setState(() {
+      isLoading = true; // Set loading to true when starting fetch
+    });
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot studentDoc = await FirebaseFirestore.instance
+            .collection(
+                'Heads of Departments') // Replace 'students' with your collection name
+            .doc(user.uid)
+            .get();
+
+        if (studentDoc.exists) {
+          setState(() {
+            hODName = studentDoc.get('name') ??
+                'Name not found'; // Get name field, handle null
+            departmentName = studentDoc.get('department') ??
+                'department not found'; // Get enrollment, handle null
+            isLoading = false; // Data loaded, set loading to false
+          });
+        } else {
+          setState(() {
+            hODName =
+                'Data not found'; // Handle case where document doesn't exist
+            departmentName = 'Data not found';
+            isLoading = false;
+          });
+          print(
+              "HOD document not found in Firestore"); // Log if document not found
+        }
+      } else {
+        setState(() {
+          hODName =
+              'User not logged in'; // Handle case where user is not logged in (shouldn't happen if properly routed)
+          departmentName = 'User not logged in';
+          isLoading = false;
+        });
+        print("No user logged in."); // Log if no user logged in
+      }
+    } catch (e) {
+      setState(() {
+        hODName = 'Error loading data'; // Handle error during data fetch
+        departmentName = 'Error loading data';
+        isLoading = false;
+      });
+      print("Error loading hod data: $e"); // Log error
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +171,7 @@ class HodHomeScreen extends StatelessWidget {
               height: 50,
             ),
             Text(
-              'Greetings,<HOD name>',
+              hODName,
               style: TextStyle(
                 fontSize: 30,
                 color: Pallet.headingColor,
@@ -113,12 +181,15 @@ class HodHomeScreen extends StatelessWidget {
             const SizedBox(
               height: 50,
             ),
-            Text(
-              '<Department Name>',
-              style: TextStyle(
-                fontSize: 30,
-                color: Pallet.extraColor,
-                fontWeight: FontWeight.w900,
+            Padding(
+              padding: const EdgeInsets.only(left: 80),
+              child: Text(
+                departmentName,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Pallet.extraColor,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             const SizedBox(

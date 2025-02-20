@@ -46,16 +46,17 @@ class _HODCreateAccountState extends State<HODCreateAccount> {
   void userFireStoredb() async {
     if (await emailAlreadyExists(emailIDController.text) == false) {
       try {
-        _signup(); // for firebase auth
-        await hods // for firebase firestore database
-            .add({
-          'name': nameController.text,
-          'email ID': emailIDController.text,
-          'phone number': phonenumberController.text,
-          'faculty ID': facultyIDController.text,
-          'department': selectedValueDepartment,
-        });
-        showSnackBar(context, "HOD's account created");
+        await _auth.signupWithEmailandPasswordHod(
+          email: emailIDController.text,
+          password: passwordController.text,
+          context: context,
+          department: selectedValueDepartment,
+          facultyID: facultyIDController.text,
+          name: nameController.text,
+          phoneNumber: phonenumberController.text,
+        );
+        showSnackBar(
+            context, " HOD Registration successful! Email verification sent.");
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => Loginpage()));
       } on FirebaseException catch (e) {
@@ -88,17 +89,6 @@ class _HODCreateAccountState extends State<HODCreateAccount> {
     phonenumberController.dispose();
     facultyIDController.dispose();
     passwordController.dispose();
-  }
-
-  // the following function will be called when clicked on
-  // the 'Create Account' button.
-
-  void _signup() async {
-    await _auth.signupWithEmailandPassword(
-      email: emailIDController.text,
-      password: passwordController.text,
-      context: context,
-    );
   }
 
   @override

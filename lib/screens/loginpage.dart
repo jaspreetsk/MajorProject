@@ -78,7 +78,7 @@ class _LoginpageState extends State<Loginpage> {
     final db = FirebaseFirestore.instance;
     final QuerySnapshot = await db
         .collection("Students")
-        .where("email ID", isEqualTo: emailIDController.text)
+        .where("email", isEqualTo: emailIDController.text)
         .limit(1)
         .get();
 
@@ -89,7 +89,7 @@ class _LoginpageState extends State<Loginpage> {
     final db = FirebaseFirestore.instance;
     final QuerySnapshot = await db
         .collection("Heads of Departments")
-        .where("email ID", isEqualTo: emailIDController.text)
+        .where("email", isEqualTo: emailIDController.text)
         .limit(1)
         .get();
 

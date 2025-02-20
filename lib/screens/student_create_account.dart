@@ -57,19 +57,19 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   void userFireStoredb() async {
     if (await emailAlreadyExists(emailIDController.text) == false) {
       try {
-        _signup(); // for firebase auth
-        await students // for firebase firestore database
-            .add({
-          'name': nameController.text,
-          'email ID': emailIDController.text,
-          'phone number': phonenumberController.text,
-          'enrollment number': enrollmentNoController.text,
-          'department': selectedValueDepartment,
-          'club': selectedValueClub,
-          'current academic year': selectedValueYear,
-          'date of birth': _selectedDate,
-        });
-        showSnackBar(context, "Student's account created");
+      await _auth.signupWithEmailandPasswordStudent(
+      email: emailIDController.text,
+      password: passwordController.text,
+      context: context,
+      club: selectedValueClub,
+      currentyear: selectedValueYear,
+      department: selectedValueDepartment,
+      dob: _selectedDate,
+      enrollmentNumber: enrollmentNoController.text,
+      name: nameController.text,
+      phoneNumber: phonenumberController.text,
+    );
+        showSnackBar(context, " Student Registration successful! Email verification sent.");
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => Loginpage()));
       } on FirebaseException catch (e) {
@@ -99,13 +99,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   // the following function will be called when clicked on
   // the 'Create Account' button.
 
-  void _signup() async {
-    await _auth.signupWithEmailandPassword(
-      email: emailIDController.text,
-      password: passwordController.text,
-      context: context,
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {

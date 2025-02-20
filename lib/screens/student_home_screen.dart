@@ -1,11 +1,79 @@
 import 'package:academiax/constants/pallet.dart';
 import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/screens/loginpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StudentHomeScreen extends StatelessWidget {
+class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({super.key});
+
+  @override
+  State<StudentHomeScreen> createState() => _StudentHomeScreenState();
+}
+
+class _StudentHomeScreenState extends State<StudentHomeScreen> {
+  String studentName = 'Loading Name...'; // Initial loading state for name
+  String enrollmentNumber =
+      'Loading Enrollment...'; // Initial loading state for enrollment
+  bool isLoading = true; // To indicate loading state
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStudentData(); // Fetch student data when the screen initializes
+  }
+
+  Future<void> _loadStudentData() async {
+    setState(() {
+      isLoading = true; // Set loading to true when starting fetch
+    });
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot studentDoc = await FirebaseFirestore.instance
+            .collection(
+                'Students') // Replace 'students' with your collection name
+            .doc(user.uid)
+            .get();
+
+        if (studentDoc.exists) {
+          setState(() {
+            studentName = studentDoc.get('name') ??
+                'Name not found'; // Get name field, handle null
+            enrollmentNumber = studentDoc.get('enrollment Number') ??
+                'Enrollment # not found'; // Get enrollment, handle null
+            isLoading = false; // Data loaded, set loading to false
+          });
+        } else {
+          setState(() {
+            studentName =
+                'Data not found'; // Handle case where document doesn't exist
+            enrollmentNumber = 'Data not found';
+            isLoading = false;
+          });
+          print(
+              "Student document not found in Firestore"); // Log if document not found
+        }
+      } else {
+        setState(() {
+          studentName =
+              'User not logged in'; // Handle case where user is not logged in (shouldn't happen if properly routed)
+          enrollmentNumber = 'User not logged in';
+          isLoading = false;
+        });
+        print("No user logged in."); // Log if no user logged in
+      }
+    } catch (e) {
+      setState(() {
+        studentName = 'Error loading data'; // Handle error during data fetch
+        enrollmentNumber = 'Error loading data';
+        isLoading = false;
+      });
+      print("Error loading student data: $e"); // Log error
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +171,9 @@ class StudentHomeScreen extends StatelessWidget {
               height: 50,
             ),
             Text(
-              'Hello,<Student name>',
+              '$studentName ($enrollmentNumber)',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 25,
                 color: Pallet.headingColor,
                 fontWeight: FontWeight.w900,
               ),
