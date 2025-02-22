@@ -57,19 +57,20 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   void userFireStoredb() async {
     if (await emailAlreadyExists(emailIDController.text) == false) {
       try {
-      await _auth.signupWithEmailandPasswordStudent(
-      email: emailIDController.text,
-      password: passwordController.text,
-      context: context,
-      club: selectedValueClub,
-      currentyear: selectedValueYear,
-      department: selectedValueDepartment,
-      dob: _selectedDate,
-      enrollmentNumber: enrollmentNoController.text,
-      name: nameController.text,
-      phoneNumber: phonenumberController.text,
-    );
-        showSnackBar(context, " Student Registration successful! Email verification sent.");
+        await _auth.signupWithEmailandPasswordStudent(
+          email: emailIDController.text,
+          password: passwordController.text,
+          context: context,
+          club: selectedValueClub,
+          semester: selectedValueYear,
+          department: selectedValueDepartment,
+          dob: _selectedDate,
+          enrollmentNumber: enrollmentNoController.text,
+          name: nameController.text,
+          phoneNumber: phonenumberController.text,
+        );
+        showSnackBar(context,
+            " Student Registration successful! Email verification sent.");
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => Loginpage()));
       } on FirebaseException catch (e) {
@@ -98,8 +99,6 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
 
   // the following function will be called when clicked on
   // the 'Create Account' button.
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -348,7 +347,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      "Current Year:",
+                      "Semester:",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 25,
@@ -373,14 +372,14 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                                 const Color.fromARGB(255, 211, 195, 132),
                             isExpanded: true,
                             hint: Text(
-                              "Select your year",
+                              "Select your semester",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             value: selectedValueYear,
-                            items: <int>[1, 2, 3, 4]
+                            items: <int>[1, 2, 3, 4, 5, 6, 7, 8]
                                 .map<DropdownMenuItem<int>>((int value) {
                               return DropdownMenuItem<int>(
                                   value: value, child: Text(value.toString()));

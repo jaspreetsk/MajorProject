@@ -1,6 +1,7 @@
 import 'package:academiax/constants/pallet.dart';
 import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/screens/loginpage.dart';
+import 'package:academiax/screens/student_academic_detalils_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -182,7 +183,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               height: 50,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => StudentAcademicDetalilsPage()));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
                 minimumSize: const Size(200, 60),
