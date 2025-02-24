@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:academiax/constants/pallet.dart';
+import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/student_home_screen.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StudentResearchPaper extends StatefulWidget {
   const StudentResearchPaper({super.key});
@@ -14,6 +21,11 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
   TextEditingController _headingController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _linkController = TextEditingController();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
+  File? _supportingDocumentFile;
+  File? _researchPaperFile;
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +123,29 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             height: 10,
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // TODO: Implement document upload for current work
+                            onPressed: () async {
+                              FilePickerResult? result =
+                                  await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: [
+                                  'jpg',
+                                  'png',
+                                  'pdf',
+                                  'docx',
+                                  'odt',
+                                ],
+                              );
+
+                              if (result != null && result.files.isNotEmpty) {
+                                setState(() {
+                                  _supportingDocumentFile =
+                                      File(result.files.first.path!);
+                                });
+                                print(
+                                    'Selected supporting document: ${_supportingDocumentFile!.path}'); // Debugging
+                              } else {
+                                // User canceled the picker
+                              }
                             },
                             child: const Text(
                               'Upload Supporting Documents',
@@ -121,6 +154,14 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                               minimumSize: const Size(50, 40),
                             ),
                           ),
+                          if (_supportingDocumentFile != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                  'Selected file: ${_supportingDocumentFile!.path.split('/').last}',
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey)),
+                            ),
                         ],
                       ),
                     if (_selectedOption == "past")
@@ -146,11 +187,38 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             height: 10,
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // TODO: Implement research paper upload for past work
+                            onPressed: () async {
+                              FilePickerResult? result =
+                                  await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: [
+                                  'pdf',
+                                  'docx',
+                                  'odt',
+                                ], // Past papers are usually PDFs
+                              );
+
+                              if (result != null && result.files.isNotEmpty) {
+                                setState(() {
+                                  _researchPaperFile =
+                                      File(result.files.first.path!);
+                                });
+                                print(
+                                    'Selected research paper: ${_researchPaperFile!.path}'); // Debugging
+                              } else {
+                                // User canceled the picker
+                              }
                             },
                             child: const Text('Upload Research Paper'),
                           ),
+                          if (_researchPaperFile != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                  'Selected file: ${_researchPaperFile!.path.split('/').last}',
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey)),
+                            ),
                         ],
                       ),
                   ],
@@ -169,37 +237,125 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                   },
                 ),
                 TextButton(
-                  child: const Text('Submit'),
-                  onPressed: () {
-                    // TODO: Implement submit logic based on selected option and fields
-                    if (_selectedOption == "current") {
-                      String heading = _headingController.text;
-                      String description = _descriptionController.text;
-                      // Handle current research work submission
-                      print("Current Research Work Submitted:");
-                      print("Heading: $heading");
-                      print("Description: $description");
-                    } else if (_selectedOption == "past") {
-                      String heading = _headingController.text;
-                      String link = _linkController.text;
-                      // Handle past research paper submission
-                      print("Past Research Paper Submitted:");
-                      print("Heading: $heading");
-                      print("Link: $link");
-                    }
-                    Navigator.of(dialogContext).pop();
-                    _selectedOption =
-                        null; // Reset selected option after submission
-                    _headingController.clear();
-                    _descriptionController.clear();
-                    _linkController.clear();
-                  },
-                ),
+                    child: const Text('Submit'),
+                    onPressed: () async {
+                      User? user = auth.currentUser;
+
+                      String? studentDocumentId = user?.uid;
+
+                      if (studentDocumentId != null) {
+                        String? supportingDocumentUrl;
+                        String? researchPaperUrl;
+
+                        if (_selectedOption == "current" &&
+                            _supportingDocumentFile != null) {
+                          supportingDocumentUrl = await _uploadFileToStorage(
+                              studentId: studentDocumentId,
+                              file: _supportingDocumentFile!,
+                              fileType: 'supporting_documents');
+                        } else if (_selectedOption == "past" &&
+                            _researchPaperFile != null) {
+                          researchPaperUrl = await _uploadFileToStorage(
+                              studentId: studentDocumentId,
+                              file: _researchPaperFile!,
+                              fileType: 'research_papers');
+                        }
+                      }
+                      if (_selectedOption == "current") {
+                        String heading = _headingController.text;
+                        String description = _descriptionController.text;
+                        _uploadResearchData(
+                          studentId: studentDocumentId,
+                          type: "current",
+                          heading: heading,
+                          description: description,
+                        );
+                      } else if (_selectedOption == "past") {
+                        String heading = _headingController.text;
+                        String link = _linkController.text;
+                        _uploadResearchData(
+                          studentId: studentDocumentId,
+                          type: "past",
+                          heading: heading,
+                          link: link,
+                        );
+                      }
+                      Navigator.of(dialogContext).pop();
+                      _selectedOption =
+                          null; // Reset selected option after submission
+                      _headingController.clear();
+                      _descriptionController.clear();
+                      _linkController.clear();
+                      _supportingDocumentFile = null;
+                      _researchPaperFile = null;
+                    }),
               ],
             );
           },
         );
       },
     );
+  }
+
+  Future<String?> _uploadFileToStorage({
+    required String studentId,
+    required File file,
+    required String fileType,
+  }) async {
+    try {
+      String fileName = file.path.split('/').last;
+      Reference storageReference = storage.ref().child(
+          'research_papers/$studentId/$fileType/$fileName'); // Storage path
+
+      UploadTask uploadTask = storageReference.putFile(file);
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      print('File uploaded to Firebase Storage. Download URL: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading file to Firebase Storage: $e');
+      // Handle error, maybe return null or throw exception
+      return null;
+    }
+  }
+
+  // Function to upload research data to Firestore
+  Future<void> _uploadResearchData({
+    required String? studentId,
+    required String type,
+    String? heading,
+    String? description,
+    String? link,
+  }) async {
+    try {
+      CollectionReference researchPapers = firestore
+          .collection('Research Paper'); // Create 'research paper' collection
+
+      // Document ID will be the same as student's document ID
+      DocumentReference studentDoc = researchPapers.doc(studentId);
+
+      Map<String, dynamic> researchData = {};
+      researchData['type'] = type;
+      researchData['heading'] = heading;
+
+      if (type == 'current') {
+        researchData['description'] = description;
+        // TODO: Add logic to store document URL after successful upload to Firebase Storage if needed
+        // researchData['documentUrl'] = 'YOUR_DOCUMENT_URL';
+      } else if (type == 'past') {
+        researchData['link'] = link;
+        // TODO: Add logic to store research paper URL after successful upload to Firebase Storage if needed
+        // researchData['researchPaperUrl'] = 'YOUR_PAPER_URL';
+      }
+
+      await studentDoc
+          .set(researchData); // Use set() to create or overwrite document
+      showSnackBar(context,
+          'Research data uploaded to Firestore for student ID: $studentId');
+      // Optionally show a success message to the user
+    } catch (e) {
+      showSnackBar(context, 'Error uploading research data to Firestore: $e');
+      // Optionally show an error message to the user
+    }
   }
 }
