@@ -1,4 +1,5 @@
 import 'package:academiax/constants/pallet.dart';
+
 import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/screens/student_academic_detalils_page.dart';
