@@ -3,7 +3,10 @@ import 'package:academiax/constants/pallet.dart';
 import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/screens/student_academic_detalils_page.dart';
+import 'package:academiax/screens/student_internship_page.dart';
+import 'package:academiax/screens/student_project_page.dart';
 import 'package:academiax/screens/student_research_paper.dart';
+import 'package:academiax/screens/studnet_online_course_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -225,7 +228,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               height: 30,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => StudentInternship()));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
                 minimumSize: const Size(200, 60),
@@ -242,7 +248,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               height: 30,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => StudentProject()));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
                 minimumSize: const Size(200, 60),
@@ -259,7 +268,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               height: 30,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                 Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => StudnetOnlineCourse()));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
                 minimumSize: const Size(200, 60),
