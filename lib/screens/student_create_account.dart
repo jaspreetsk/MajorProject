@@ -33,7 +33,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
   final TextEditingController phonenumberController = TextEditingController();
   final TextEditingController enrollmentNoController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  final TextEditingController sectionController = TextEditingController();
   // firestore collection
 
   CollectionReference students =
@@ -68,6 +68,7 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
           enrollmentNumber: enrollmentNoController.text,
           name: nameController.text,
           phoneNumber: phonenumberController.text,
+          section:sectionController.text,
         );
         showSnackBar(context,
             " Student Registration successful! Email verification sent.");
@@ -393,6 +394,28 @@ class _StudentCreateAccountState extends State<StudentCreateAccount> {
                     )
                   ],
                 ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    "Section",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Pallet.headingColor,
+                    ),
+                  ),
+                ),
+              ),
+              TextFieldArea(
+                hintText: "Use capital letter",
+                textFieldController: sectionController,
               ),
               const SizedBox(
                 height: 20,

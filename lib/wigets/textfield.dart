@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 
 class TextFieldArea extends StatelessWidget {
   final TextEditingController textFieldController;
-  const TextFieldArea({super.key, required this.textFieldController});
+  final String? hintText; // Added optional hintText parameter
+  const TextFieldArea(
+      {super.key,
+      required this.textFieldController,
+      this.hintText}); // Updated constructor
 
   @override
   Widget build(BuildContext context) {
@@ -11,24 +15,31 @@ class TextFieldArea extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20.0, right: 20.0),
       child: TextField(
         controller: textFieldController,
-        style: TextStyle(
+        style: const TextStyle(
           color: Pallet.headingColor,
           fontWeight: FontWeight.w600,
         ),
         decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
+          hintText: hintText, // Use hintText here
+          hintStyle: const TextStyle(
+            fontSize: 19,
+            // Optional: Style the hint text
+            color: Color(0xFF625d4c),
+            fontWeight: FontWeight.bold,
+          ),
+          enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Pallet.headingColor, width: 2.0),
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Pallet.headingColor, width: 2.0),
           ),
-          errorBorder: OutlineInputBorder(
+          errorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Pallet.headingColor, width: 2.0),
           ),
-          focusedErrorBorder: OutlineInputBorder(
+          focusedErrorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Pallet.headingColor, width: 2.0),
           ),
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderSide: BorderSide(
               color: Pallet.headingColor,
             ),

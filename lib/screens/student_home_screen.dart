@@ -1,9 +1,10 @@
 import 'package:academiax/constants/pallet.dart';
-
 import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/screens/loginpage.dart';
 import 'package:academiax/screens/student_academic_detalils_page.dart';
+import 'package:academiax/screens/student_club_page.dart';
 import 'package:academiax/screens/student_internship_page.dart';
+import 'package:academiax/screens/student_profile_page.dart';
 import 'package:academiax/screens/student_project_page.dart';
 import 'package:academiax/screens/student_research_paper.dart';
 import 'package:academiax/screens/studnet_online_course_page.dart';
@@ -23,6 +24,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   String studentName = 'Loading Name...'; // Initial loading state for name
   String enrollmentNumber =
       'Loading Enrollment...'; // Initial loading state for enrollment
+  String? profileImageUrl; // To store profile image URL
   bool isLoading = true; // To indicate loading state
 
   @override
@@ -50,6 +52,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 'Name not found'; // Get name field, handle null
             enrollmentNumber = studentDoc.get('enrollment Number') ??
                 'Enrollment # not found'; // Get enrollment, handle null
+            profileImageUrl =
+                studentDoc.get('profileImageUrl'); // Fetch profile image URL
             isLoading = false; // Data loaded, set loading to false
           });
         } else {
@@ -118,16 +122,22 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Pallet.headingColor,
-              ),
-              child: Text(
-                'App Menu',
-                style: TextStyle(
-                  color: Pallet.backgroundColor,
-                  fontSize: 24,
+            Container(
+              height: 200, // Adjust height as needed
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: Pallet.headingColor,
+                  image: profileImageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(profileImageUrl!),
+                          fit: BoxFit.cover, // Cover the entire header
+                        )
+                      : null,
                 ),
+                accountName: null, // Removed Name
+                accountEmail: null, // Removed Enrollment Number
+                currentAccountPicture:
+                    null, // Set to null to remove CircleAvatar
               ),
             ),
             ListTile(
@@ -143,7 +153,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     fontWeight: FontWeight.bold,
                     fontSize: 25),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => StudentProfile()));
+              },
             ),
             ListTile(
               leading: Icon(
@@ -269,8 +282,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => StudnetOnlineCourse()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => StudnetOnlineCourse()));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
@@ -288,7 +301,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               height: 30,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => StudentClub()));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Pallet.buttonColor,
                 minimumSize: const Size(200, 60),

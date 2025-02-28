@@ -19,6 +19,7 @@ class FirebaseAuthMethods {
     required String name,
     required String phoneNumber,
     required BuildContext context,
+    required String section,
   }) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
@@ -40,16 +41,17 @@ class FirebaseAuthMethods {
           'email': email,
           'department': department,
           'club': club,
-          'semester':semester,
+          'semester': semester,
           'date of birth': dob,
-          'phone number':phoneNumber,
+          'phone number': phoneNumber,
+          'section': section,
           'createdAt': FieldValue.serverTimestamp(),
           // ... other user data ...
         });
       }
 
       await sendEmailVerification(context);
-      
+
       return credential.user;
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);
@@ -69,7 +71,7 @@ class FirebaseAuthMethods {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-          User? user = credential.user;
+      User? user = credential.user;
       if (user != null) {
         // **Step 1: User created in Firebase Authentication successfully.  We now have 'user.uid'**
 
@@ -81,17 +83,18 @@ class FirebaseAuthMethods {
             .set({
           'uid': user.uid, // Optionally store UID as a field
           'name': name,
-          'facultu ID': facultyID,
+          'faculty ID': facultyID,
           'email': email,
           'department': department,
-          'phone number':phoneNumber,
+          'phone number': phoneNumber,
           'createdAt': FieldValue.serverTimestamp(),
           // ... other user data ...
         });
       }
 
       await sendEmailVerification(context);
-      showSnackBar(context, "Registration successful! Email verification sent.");
+      showSnackBar(
+          context, "Registration successful! Email verification sent.");
       return credential.user;
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);
