@@ -133,7 +133,7 @@ class _HodHomeScreenState extends State<HodHomeScreen> {
     }
   }
 
-  Widget _buildYearButton(String year, bool isVisible) {
+  Widget _buildYearButton(String year, bool isVisible, String departmentName) {
     return Visibility(
       visible: isVisible,
       child: Container(
@@ -144,6 +144,7 @@ class _HodHomeScreenState extends State<HodHomeScreen> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => HodYearPage(
                       year: year,
+                      departmentName: departmentName,
                     )));
           },
           style: ElevatedButton.styleFrom(
@@ -661,8 +662,10 @@ class _HodHomeScreenState extends State<HodHomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildYearButton("Year I", hasYear1Students),
-                      _buildYearButton("Year II", hasYear2Students),
+                      _buildYearButton(
+                          "Year I", hasYear1Students, departmentName),
+                      _buildYearButton(
+                          "Year II", hasYear2Students, departmentName),
                     ],
                   ),
                 ),
@@ -670,8 +673,10 @@ class _HodHomeScreenState extends State<HodHomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildYearButton("Year III", hasYear3Students),
-                    _buildYearButton("Year IV", hasYear4Students),
+                    _buildYearButton(
+                        "Year III", hasYear3Students, departmentName),
+                    _buildYearButton(
+                        "Year IV", hasYear4Students, departmentName),
                   ],
                 ),
             ],

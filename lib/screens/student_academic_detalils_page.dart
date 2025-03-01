@@ -234,13 +234,7 @@ class _StudentAcademicDetalilsPageState
           )),
         ]));
       }
-      // Display data for the current semester as well if available
-      // String currentSem = '$studentSemester';
-      // rows.add(DataRow(cells: [
-      //   DataCell(Text('Semester $currentSem')),
-      //   DataCell(Text(academicData?['SGPA$currentSem']?.toString() ?? 'N/A')),
-      //   DataCell(Text(academicData?['CGPA$currentSem']?.toString() ?? 'N/A')),
-      // ]));
+      
 
       return rows;
     }

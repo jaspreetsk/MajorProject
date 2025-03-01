@@ -1354,3 +1354,4 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
         .snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
   }
 }
+
