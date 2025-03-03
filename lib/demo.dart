@@ -630,9 +630,9 @@ class StudentResearchPaper extends StatefulWidget {
 
 class _StudentResearchPaperState extends State<StudentResearchPaper> {
   String? _selectedOption;
-  TextEditingController _headingController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _linkController = TextEditingController();
+  final TextEditingController _headingController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -1199,9 +1199,9 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
     TextEditingController editLinkController =
         TextEditingController(text: currentLink);
 
-    File? _newFile;
-    bool _deleteExistingFile = false;
-    List<File> _additionalFiles = []; // List to store additional files
+    File? newFile;
+    bool deleteExistingFile = false;
+    List<File> additionalFiles = []; // List to store additional files
 
     showDialog(
       context: context,
@@ -1236,7 +1236,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                           ),
                     const SizedBox(height: 20),
                     // Display current file (if exists and not marked for deletion)
-                    if (!_deleteExistingFile && currentFileUrl.isNotEmpty)
+                    if (!deleteExistingFile && currentFileUrl.isNotEmpty)
                       Row(
                         children: [
                           Expanded(
@@ -1249,13 +1249,13 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
-                                _deleteExistingFile = true;
+                                deleteExistingFile = true;
                               });
                             },
                           ),
                         ],
                       ),
-                    if (_deleteExistingFile)
+                    if (deleteExistingFile)
                       const Text(
                         'File will be deleted.',
                         style: TextStyle(color: Colors.red),
@@ -1277,10 +1277,10 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                               );
                               if (result != null && result.files.isNotEmpty) {
                                 setState(() {
-                                  _newFile = File(result.files.first.path!);
-                                  _deleteExistingFile = false;
+                                  newFile = File(result.files.first.path!);
+                                  deleteExistingFile = false;
                                 });
-                                print('Selected new file: ${_newFile!.path}');
+                                print('Selected new file: ${newFile!.path}');
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -1308,7 +1308,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 setState(() {
                                   for (var file in result.files) {
                                     if (file.path != null) {
-                                      _additionalFiles.add(File(file.path!));
+                                      additionalFiles.add(File(file.path!));
                                     }
                                   }
                                 });
@@ -1325,16 +1325,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                       ],
                     ),
 
-                    if (_newFile != null)
+                    if (newFile != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          'New file: ${_newFile!.path.split('/').last}',
+                          'New file: ${newFile!.path.split('/').last}',
                           style:
                               const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ),
-                    if (_additionalFiles.isNotEmpty) // Display added files
+                    if (additionalFiles.isNotEmpty) // Display added files
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Column(
@@ -1343,7 +1343,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             const Text('Added documents:',
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.grey)),
-                            ..._additionalFiles.map((file) => Text(
+                            ...additionalFiles.map((file) => Text(
                                   '• ${file.path.split('/').last}',
                                   style: const TextStyle(
                                       fontSize: 12, color: Colors.grey),
@@ -1371,15 +1371,15 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
                     String? newFileUrl;
                     // If a new file was selected (replace file button)
-                    if (_newFile != null) {
+                    if (newFile != null) {
                       newFileUrl = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
-                        file: _newFile!,
+                        file: newFile!,
                         fileType: researchType == 'current'
                             ? 'supporting_documents'
                             : 'research_papers',
                       );
-                    } else if (_deleteExistingFile &&
+                    } else if (deleteExistingFile &&
                         currentFileUrl.isNotEmpty) {
                       // Delete the existing file from storage if deletion is requested
                       try {
@@ -1393,7 +1393,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
                     // Upload additional files and get their URLs
                     List<String> newAdditionalUrls = [];
-                    for (var file in _additionalFiles) {
+                    for (var file in additionalFiles) {
                       String? url = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
                         file: file,
@@ -1411,9 +1411,9 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                     updateData['heading'] = updatedHeading;
                     if (researchType == 'current') {
                       updateData['description'] = updatedDescription;
-                      if (_newFile != null) {
+                      if (newFile != null) {
                         updateData['documentUrl'] = newFileUrl;
-                      } else if (_deleteExistingFile) {
+                      } else if (deleteExistingFile) {
                         updateData['documentUrl'] = '';
                       }
                       // Add new additional document URLs if any
@@ -1432,9 +1432,9 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                       }
                     } else {
                       updateData['link'] = updatedLink;
-                      if (_newFile != null) {
+                      if (newFile != null) {
                         updateData['researchPaperUrl'] = newFileUrl;
-                      } else if (_deleteExistingFile) {
+                      } else if (deleteExistingFile) {
                         updateData['researchPaperUrl'] = '';
                       }
                       // Add new additional research paper URLs if any
@@ -1575,13 +1575,13 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 // User canceled the picker
                               }
                             },
-                            child: const Text(
-                              'Upload Supporting Documents',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Pallet.headingColor,
                               minimumSize: const Size(50, 40),
+                            ),
+                            child: const Text(
+                              'Upload Supporting Documents',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                           if (_supportingDocumentFile != null)
@@ -1639,12 +1639,12 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 // User canceled the picker
                               }
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Pallet.headingColor,
+                            ),
                             child: const Text(
                               'Upload Research Paper',
                               style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Pallet.headingColor,
                             ),
                           ),
                           if (_researchPaperFile != null)
@@ -1861,6 +1861,6 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
         .collection('research paper')
         .doc(studentId)
         .collection(type) // Access the 'current' or 'past' subcollection
-        .snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
+        .snapshots();
   }
 }

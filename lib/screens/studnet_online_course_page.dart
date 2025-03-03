@@ -100,13 +100,13 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
     );
   }
   void _showUploadOnlineCourseDialog(BuildContext context) {
-  String? _selectedOption;
-  final TextEditingController _courseNameController = TextEditingController();
-  final TextEditingController _platformNameController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _skillsAcquiredController = TextEditingController();
-  List<File> _proofDocumentFiles = []; // Changed to List for multiple proof documents
-  List<File> _certificateFiles = []; // Changed to List for multiple certificates
+  String? selectedOption;
+  final TextEditingController courseNameController = TextEditingController();
+  final TextEditingController platformNameController = TextEditingController();
+  final TextEditingController durationController = TextEditingController();
+  final TextEditingController skillsAcquiredController = TextEditingController();
+  List<File> proofDocumentFiles = []; // Changed to List for multiple proof documents
+  List<File> certificateFiles = []; // Changed to List for multiple certificates
 
   showDialog(
     context: context,
@@ -122,7 +122,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                 children: <Widget>[
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(labelText: 'Select Option'),
-                    value: _selectedOption,
+                    value: selectedOption,
                     items: const [
                       DropdownMenuItem(
                         value: "current",
@@ -135,31 +135,31 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                     ],
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedOption = newValue;
+                        selectedOption = newValue;
                       });
                     },
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
-                    controller: _courseNameController,
+                    controller: courseNameController,
                     decoration: const InputDecoration(
                       labelText: 'Name of Course',
                     ),
                   ),
                   const SizedBox(height: 5),
                   TextFormField(
-                    controller: _platformNameController,
+                    controller: platformNameController,
                     decoration: const InputDecoration(
                         labelText: 'Platform Name'),
                   ),
                   const SizedBox(height: 5),
                   TextFormField(
-                    controller: _durationController,
+                    controller: durationController,
                     decoration: const InputDecoration(
                         labelText: 'Duration (e.g., Weeks, Hours)'),
                   ),
 
-                  if (_selectedOption == "current")
+                  if (selectedOption == "current")
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -174,7 +174,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                             );
                             if (result != null && result.files.isNotEmpty) {
                               setState(() {
-                                _proofDocumentFiles = result.files.map((e) => File(e.path!)).toList(); // Store multiple files
+                                proofDocumentFiles = result.files.map((e) => File(e.path!)).toList(); // Store multiple files
                               });
                             }
                           },
@@ -183,7 +183,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                           ),
                           child: const Text('Upload Proof Documents', style: TextStyle(color: Colors.white)), // Changed to plural
                         ),
-                        if (_proofDocumentFiles.isNotEmpty)
+                        if (proofDocumentFiles.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Column(
@@ -191,7 +191,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                               children: [
                                 const Text('Selected proof documents:', // Changed to plural
                                     style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                ..._proofDocumentFiles.map((file) => Text( // Display list of files
+                                ...proofDocumentFiles.map((file) => Text( // Display list of files
                                     '• ${file.path.split('/').last}',
                                     style: const TextStyle(fontSize: 12, color: Colors.grey))),
                               ],
@@ -199,13 +199,13 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                           ),
                       ],
                     ),
-                  if (_selectedOption == "past")
+                  if (selectedOption == "past")
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: 5),
                         TextFormField(
-                          controller: _skillsAcquiredController,
+                          controller: skillsAcquiredController,
                           decoration: const InputDecoration(
                               labelText: 'Skills Acquired (Optional)'),
                           maxLines: 2,
@@ -221,7 +221,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                             );
                             if (result != null && result.files.isNotEmpty) {
                               setState(() {
-                                _certificateFiles = result.files.map((e) => File(e.path!)).toList(); // Store multiple files
+                                certificateFiles = result.files.map((e) => File(e.path!)).toList(); // Store multiple files
                               });
                             }
                           },
@@ -230,7 +230,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                           ),
                           child: const Text('Upload Certificates', style: TextStyle(color: Colors.white)), // Keep plural
                         ),
-                        if (_certificateFiles.isNotEmpty)
+                        if (certificateFiles.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Column(
@@ -238,7 +238,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                               children: [
                                 const Text('Selected certificates:',
                                     style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                ..._certificateFiles.map((file) => Text( // Display list of files
+                                ...certificateFiles.map((file) => Text( // Display list of files
                                     '• ${file.path.split('/').last}',
                                     style: const TextStyle(fontSize: 12, color: Colors.grey))),
                               ],
@@ -262,12 +262,12 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                   User? user = auth.currentUser;
                   String? studentDocumentId = user?.uid;
 
-                  if (studentDocumentId != null && _selectedOption != null) {
+                  if (studentDocumentId != null && selectedOption != null) {
                     List<String> proofDocumentUrls = []; // Changed to List
                     List<String> certificateUrls = []; // Changed to List
 
-                    if (_selectedOption == "current" && _proofDocumentFiles.isNotEmpty) { // Check if list is not empty
-                      for (File file in _proofDocumentFiles) { // Loop through multiple files
+                    if (selectedOption == "current" && proofDocumentFiles.isNotEmpty) { // Check if list is not empty
+                      for (File file in proofDocumentFiles) { // Loop through multiple files
                         String? url = await _uploadFileToStorage(
                           studentId: studentDocumentId,
                           file: file,
@@ -279,8 +279,8 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                       }
                     }
 
-                    if (_selectedOption == "past" && _certificateFiles.isNotEmpty) { // Check if list is not empty
-                      for (File file in _certificateFiles) { // Loop through multiple files
+                    if (selectedOption == "past" && certificateFiles.isNotEmpty) { // Check if list is not empty
+                      for (File file in certificateFiles) { // Loop through multiple files
                         String? url = await _uploadFileToStorage(
                           studentId: studentDocumentId,
                           file: file,
@@ -292,15 +292,15 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                       }
                     }
 
-                    String courseName = _courseNameController.text.trim();
-                    String platformName = _platformNameController.text.trim();
-                    String duration = _durationController.text.trim();
-                    String skillsAcquired = _skillsAcquiredController.text.trim();
+                    String courseName = courseNameController.text.trim();
+                    String platformName = platformNameController.text.trim();
+                    String duration = durationController.text.trim();
+                    String skillsAcquired = skillsAcquiredController.text.trim();
 
 
                     _uploadOnlineCourseData(
                       studentId: studentDocumentId,
-                      type: _selectedOption!,
+                      type: selectedOption!,
                       courseName: courseName,
                       platformName: platformName,
                       duration: duration,
@@ -310,13 +310,13 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                     );
 
                     Navigator.of(dialogContext).pop();
-                    _selectedOption = null;
-                    _courseNameController.clear();
-                    _platformNameController.clear();
-                    _durationController.clear();
-                    _skillsAcquiredController.clear();
-                    _proofDocumentFiles = []; // Clear file lists
-                    _certificateFiles = []; // Clear file lists
+                    selectedOption = null;
+                    courseNameController.clear();
+                    platformNameController.clear();
+                    durationController.clear();
+                    skillsAcquiredController.clear();
+                    proofDocumentFiles = []; // Clear file lists
+                    certificateFiles = []; // Clear file lists
                     _loadOnlineCourse(); // Call function to refresh online course list
                   } else {
                     showSnackBar(context, "Error: User not authenticated or Option not selected.");
@@ -484,8 +484,7 @@ Widget _buildOnlineCourseList(
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.grey)),
                                 for (var certUrl in certificateUrls)
-                                  if (certUrl != null &&
-                                      certUrl.toString().isNotEmpty)
+                                  if (certUrl.toString().isNotEmpty)
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 4.0),
@@ -525,8 +524,7 @@ Widget _buildOnlineCourseList(
                                       style: TextStyle(
                                           fontSize: 16, color: Colors.grey)),
                                   for (var proofUrl in proofDocumentUrls)
-                                    if (proofUrl != null &&
-                                        proofUrl.toString().isNotEmpty)
+                                    if (proofUrl.toString().isNotEmpty)
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 4.0),
@@ -646,7 +644,7 @@ Stream<QuerySnapshot<Map<String, dynamic>>> _getOnlineCourseStream(
         .collection('online_courses') // Changed collection to 'internship'
         .doc(studentId)
         .collection(type) // Access the 'current' or 'past' subcollection
-        .snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
+        .snapshots();
   }
 
  @override

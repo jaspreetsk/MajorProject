@@ -296,7 +296,6 @@
 import 'dart:io';
 
 import 'package:academiax/constants/pallet.dart';
-import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/hod_home_screen.dart'; // Assuming you have a HOD home screen
 import 'package:academiax/wigets/textfield.dart';
@@ -314,7 +313,7 @@ class HODProfile extends StatefulWidget {
 }
 
 class _HODProfileState extends State<HODProfile> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController facultyIDController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();

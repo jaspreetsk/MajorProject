@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class HodAcademicDetailsPage extends StatefulWidget {
   final DocumentSnapshot studentDetails; // Receive student details as parameter
 
-  const HodAcademicDetailsPage({Key? key, required this.studentDetails}) : super(key: key);
+  const HodAcademicDetailsPage({super.key, required this.studentDetails});
 
   @override
   State<HodAcademicDetailsPage> createState() => _HodAcademicDetailsPageState();

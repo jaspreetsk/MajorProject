@@ -136,7 +136,7 @@ class _HodHomeScreenState extends State<HodHomeScreen> {
   Widget _buildYearButton(String year, bool isVisible, String departmentName) {
     return Visibility(
       visible: isVisible,
-      child: Container(
+      child: SizedBox(
         width: 150,
         height: 150,
         child: ElevatedButton(
@@ -556,7 +556,7 @@ class _HodHomeScreenState extends State<HodHomeScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            Container(
+            SizedBox(
               height: 200,
               child: UserAccountsDrawerHeader(
                 decoration: BoxDecoration(

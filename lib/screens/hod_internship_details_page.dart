@@ -8,8 +8,8 @@ class HodViewStudentInternshipWorkPage extends StatefulWidget {
   final String studentId;
   final String studentName;
 
-  HodViewStudentInternshipWorkPage(
-      {required this.studentId, required this.studentName});
+  const HodViewStudentInternshipWorkPage(
+      {super.key, required this.studentId, required this.studentName});
 
   @override
   _HodViewStudentInternshipWorkPageState createState() =>

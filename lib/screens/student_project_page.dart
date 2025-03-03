@@ -1,6 +1,5 @@
 import 'package:academiax/constants/pallet.dart';
 import 'dart:io';
-import 'package:academiax/constants/pallet.dart';
 import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/student_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -163,14 +162,14 @@ class _StudentProjectState extends State<StudentProject> {
 // project's details
 
   void _showUploadProjectDialog(BuildContext context) {
-    String? _selectedOption;
-    final TextEditingController _projectTitleController =
+    String? selectedOption;
+    final TextEditingController projectTitleController =
         TextEditingController();
-    final TextEditingController _projectDescriptionController =
+    final TextEditingController projectDescriptionController =
         TextEditingController();
-    List<File> _videoFiles = [];
-    List<File> _documentFiles = [];
-    List<File> _photoFiles = [];
+    List<File> videoFiles = [];
+    List<File> documentFiles = [];
+    List<File> photoFiles = [];
 
     showDialog(
       context: context,
@@ -187,7 +186,7 @@ class _StudentProjectState extends State<StudentProject> {
                     DropdownButtonFormField<String>(
                       decoration:
                           const InputDecoration(labelText: 'Select Option'),
-                      value: _selectedOption,
+                      value: selectedOption,
                       items: const [
                         DropdownMenuItem(
                           value: "current",
@@ -200,25 +199,25 @@ class _StudentProjectState extends State<StudentProject> {
                       ],
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedOption = newValue;
+                          selectedOption = newValue;
                         });
                       },
                     ),
-                    if (_selectedOption !=
+                    if (selectedOption !=
                         null) // Show fields only after option is selected
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const SizedBox(height: 15),
                           TextFormField(
-                            controller: _projectTitleController,
+                            controller: projectTitleController,
                             decoration: const InputDecoration(
                               labelText: 'Project Title',
                             ),
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _projectDescriptionController,
+                            controller: projectDescriptionController,
                             decoration: const InputDecoration(
                                 labelText: 'Project Description'),
                             maxLines: 3, // Allows for longer descriptions
@@ -236,7 +235,7 @@ class _StudentProjectState extends State<StudentProject> {
                               if (videoResult != null &&
                                   videoResult.files.isNotEmpty) {
                                 setState(() {
-                                  _videoFiles = videoResult.files
+                                  videoFiles = videoResult.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
@@ -247,7 +246,7 @@ class _StudentProjectState extends State<StudentProject> {
                             child: const Text('Upload Video(s)',
                                 style: TextStyle(color: Colors.white)),
                           ),
-                          if (_videoFiles.isNotEmpty)
+                          if (videoFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -256,7 +255,7 @@ class _StudentProjectState extends State<StudentProject> {
                                   const Text('Selected videos:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._videoFiles.map((file) => Text(
+                                  ...videoFiles.map((file) => Text(
                                       '• ${file.path.split('/').last}',
                                       style: const TextStyle(
                                           fontSize: 12, color: Colors.grey))),
@@ -282,7 +281,7 @@ class _StudentProjectState extends State<StudentProject> {
                               if (documentResult != null &&
                                   documentResult.files.isNotEmpty) {
                                 setState(() {
-                                  _documentFiles = documentResult.files
+                                  documentFiles = documentResult.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
@@ -293,7 +292,7 @@ class _StudentProjectState extends State<StudentProject> {
                             child: const Text('Upload Document(s)',
                                 style: TextStyle(color: Colors.white)),
                           ),
-                          if (_documentFiles.isNotEmpty)
+                          if (documentFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -302,7 +301,7 @@ class _StudentProjectState extends State<StudentProject> {
                                   const Text('Selected documents:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._documentFiles.map((file) => Text(
+                                  ...documentFiles.map((file) => Text(
                                       '• ${file.path.split('/').last}',
                                       style: const TextStyle(
                                           fontSize: 12, color: Colors.grey))),
@@ -322,7 +321,7 @@ class _StudentProjectState extends State<StudentProject> {
                               if (photoResult != null &&
                                   photoResult.files.isNotEmpty) {
                                 setState(() {
-                                  _photoFiles = photoResult.files
+                                  photoFiles = photoResult.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
@@ -333,7 +332,7 @@ class _StudentProjectState extends State<StudentProject> {
                             child: const Text('Upload Photo(s)',
                                 style: TextStyle(color: Colors.white)),
                           ),
-                          if (_photoFiles.isNotEmpty)
+                          if (photoFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -342,7 +341,7 @@ class _StudentProjectState extends State<StudentProject> {
                                   const Text('Selected photos:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._photoFiles.map((file) => Text(
+                                  ...photoFiles.map((file) => Text(
                                       '• ${file.path.split('/').last}',
                                       style: const TextStyle(
                                           fontSize: 12, color: Colors.grey))),
@@ -359,12 +358,12 @@ class _StudentProjectState extends State<StudentProject> {
                   child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    _selectedOption = null;
-                    _projectTitleController.clear();
-                    _projectDescriptionController.clear();
-                    _videoFiles.clear();
-                    _documentFiles.clear();
-                    _photoFiles.clear();
+                    selectedOption = null;
+                    projectTitleController.clear();
+                    projectDescriptionController.clear();
+                    videoFiles.clear();
+                    documentFiles.clear();
+                    photoFiles.clear();
                   },
                 ),
                 TextButton(
@@ -373,13 +372,13 @@ class _StudentProjectState extends State<StudentProject> {
                     User? user = auth.currentUser;
                     String? studentDocumentId = user?.uid;
 
-                    if (studentDocumentId != null && _selectedOption != null) {
+                    if (studentDocumentId != null && selectedOption != null) {
                       List<String> videoUrls = [];
                       List<String> documentUrls = [];
                       List<String> photoUrls = [];
 
                       // Upload videos
-                      for (File file in _videoFiles) {
+                      for (File file in videoFiles) {
                         String? url = await _uploadFileToStorage(
                             studentId: studentDocumentId,
                             file: file,
@@ -389,7 +388,7 @@ class _StudentProjectState extends State<StudentProject> {
                         }
                       }
                       // Upload documents
-                      for (File file in _documentFiles) {
+                      for (File file in documentFiles) {
                         String? url = await _uploadFileToStorage(
                             studentId: studentDocumentId,
                             file: file,
@@ -400,7 +399,7 @@ class _StudentProjectState extends State<StudentProject> {
                         }
                       }
                       // Upload photos
-                      for (File file in _photoFiles) {
+                      for (File file in photoFiles) {
                         String? url = await _uploadFileToStorage(
                             studentId: studentDocumentId,
                             file: file,
@@ -410,13 +409,13 @@ class _StudentProjectState extends State<StudentProject> {
                         }
                       }
 
-                      String projectTitle = _projectTitleController.text.trim();
+                      String projectTitle = projectTitleController.text.trim();
                       String projectDescription =
-                          _projectDescriptionController.text.trim();
+                          projectDescriptionController.text.trim();
 
                       _uploadProjectData(
                         studentId: studentDocumentId,
-                        type: _selectedOption!,
+                        type: selectedOption!,
                         projectTitle: projectTitle,
                         projectDescription: projectDescription,
                         videoUrls: videoUrls,
@@ -425,12 +424,12 @@ class _StudentProjectState extends State<StudentProject> {
                       );
 
                       Navigator.of(dialogContext).pop();
-                      _selectedOption = null;
-                      _projectTitleController.clear();
-                      _projectDescriptionController.clear();
-                      _videoFiles.clear();
-                      _documentFiles.clear();
-                      _photoFiles.clear();
+                      selectedOption = null;
+                      projectTitleController.clear();
+                      projectDescriptionController.clear();
+                      videoFiles.clear();
+                      documentFiles.clear();
+                      photoFiles.clear();
                       // _loadProjects(); // Function to load projects - create this next
                       showSnackBar(
                           context, 'Project details uploaded successfully!');
@@ -578,7 +577,7 @@ class _StudentProjectState extends State<StudentProject> {
                                                     ),
                                                   ),
                                                 ))
-                                            .toList(),
+                                            ,
                                       ],
                                     ),
                                   if (documentUrls.isNotEmpty)
@@ -627,7 +626,7 @@ class _StudentProjectState extends State<StudentProject> {
                                                     ),
                                                   ),
                                                 ))
-                                            .toList(),
+                                            ,
                                       ],
                                     ),
                                   if (photoUrls.isNotEmpty)
@@ -676,7 +675,7 @@ class _StudentProjectState extends State<StudentProject> {
                                                     ),
                                                   ),
                                                 ))
-                                            .toList(),
+                                            ,
                                       ],
                                     ),
                                 ],
@@ -795,7 +794,7 @@ class _StudentProjectState extends State<StudentProject> {
         .collection('projects') // Changed collection to 'internship'
         .doc(studentId)
         .collection(type) // Access the 'current' or 'past' subcollection
-        .snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
+        .snapshots();
   }
 
   // 7th block of code to delete data from card(s)

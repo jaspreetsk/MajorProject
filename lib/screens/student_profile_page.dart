@@ -540,7 +540,6 @@
 import 'dart:io';
 
 import 'package:academiax/constants/pallet.dart';
-import 'package:academiax/firebase_authentication/firebase_auth.dart';
 import 'package:academiax/firebase_authentication/show_snack_bar.dart';
 import 'package:academiax/screens/student_home_screen.dart';
 import 'package:academiax/wigets/textfield.dart';
@@ -558,7 +557,7 @@ class StudentProfile extends StatefulWidget {
 }
 
 class _StudentProfileState extends State<StudentProfile> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController enrollmentNoController = TextEditingController();
   final TextEditingController sectionController =

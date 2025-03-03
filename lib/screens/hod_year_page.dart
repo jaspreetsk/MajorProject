@@ -166,7 +166,7 @@ class HodYearPage extends StatefulWidget {
   final String year;
   final String departmentName; // Add departmentName
 
-  const HodYearPage({Key? key, required this.year, required this.departmentName}) : super(key: key); // Receive departmentName
+  const HodYearPage({super.key, required this.year, required this.departmentName}); // Receive departmentName
 
   @override
   State<HodYearPage> createState() => _HodYearPageState();

@@ -123,8 +123,9 @@ class _StudentAcademicDetalilsPageState
   }
 
   List<DataColumn> _createColumns() {
-    if (studentSemester == -1)
+    if (studentSemester == -1) {
       return []; // Return empty if semester is not loaded yet
+    }
 
     if (studentSemester == 1) {
       return [
@@ -167,8 +168,9 @@ class _StudentAcademicDetalilsPageState
   }
 
   List<DataRow> _createRows() {
-    if (academicData == null)
+    if (academicData == null) {
       return []; // Return empty if academic data is not loaded
+    }
 
     if (studentSemester == 1) {
       return [

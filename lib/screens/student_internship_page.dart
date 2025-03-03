@@ -102,13 +102,13 @@ class _StudentInternshipState extends State<StudentInternship> {
   // 1st block of code for [+] bottom-right upload button
 
   void _showUploadInternshipDialog(BuildContext context) {
-    String? _selectedOption;
-    final TextEditingController _companyNameController =
+    String? selectedOption;
+    final TextEditingController companyNameController =
         TextEditingController();
-    final TextEditingController _fieldController = TextEditingController();
-    final TextEditingController _durationController = TextEditingController();
-    final TextEditingController _stipendController = TextEditingController();
-    List<File> _certificateFiles =
+    final TextEditingController fieldController = TextEditingController();
+    final TextEditingController durationController = TextEditingController();
+    final TextEditingController stipendController = TextEditingController();
+    List<File> certificateFiles =
         []; // List to store multiple certificate files
 
     showDialog(
@@ -125,7 +125,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                     DropdownButtonFormField<String>(
                       decoration:
                           const InputDecoration(labelText: 'Select Option'),
-                      value: _selectedOption,
+                      value: selectedOption,
                       items: const [
                         DropdownMenuItem(
                           value: "current",
@@ -138,29 +138,29 @@ class _StudentInternshipState extends State<StudentInternship> {
                       ],
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedOption = newValue;
+                          selectedOption = newValue;
                         });
                       },
                     ),
-                    if (_selectedOption == "current")
+                    if (selectedOption == "current")
                       Column(
                         children: [
                           const SizedBox(height: 15),
                           TextFormField(
-                            controller: _companyNameController,
+                            controller: companyNameController,
                             decoration: const InputDecoration(
                               labelText: 'Company Name',
                             ),
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _fieldController,
+                            controller: fieldController,
                             decoration: const InputDecoration(
                                 labelText: 'Field/Technology'),
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _durationController,
+                            controller: durationController,
                             decoration: const InputDecoration(
                                 labelText: 'Duration (Days)'),
                             keyboardType:
@@ -168,7 +168,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _stipendController,
+                            controller: stipendController,
                             decoration: const InputDecoration(
                                 labelText: 'Stipend (or N/A)'),
                           ),
@@ -190,26 +190,26 @@ class _StudentInternshipState extends State<StudentInternship> {
 
                               if (result != null && result.files.isNotEmpty) {
                                 setState(() {
-                                  _certificateFiles = result.files
+                                  certificateFiles = result.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
                                 print(
-                                    'Selected certificate files: ${_certificateFiles.map((file) => file.path).toList()}'); // Debugging
+                                    'Selected certificate files: ${certificateFiles.map((file) => file.path).toList()}'); // Debugging
                               } else {
                                 // User canceled the picker
                               }
                             },
-                            child: const Text(
-                              'Upload Certificates',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Pallet.headingColor,
                               minimumSize: const Size(50, 40),
                             ),
+                            child: const Text(
+                              'Upload Certificates',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                          if (_certificateFiles.isNotEmpty)
+                          if (certificateFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -218,7 +218,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                                   const Text('Selected certificates:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._certificateFiles.map((file) => Text(
+                                  ...certificateFiles.map((file) => Text(
                                       '• ${file.path.split('/').last}',
                                       style: const TextStyle(
                                           fontSize: 12, color: Colors.grey))),
@@ -227,25 +227,25 @@ class _StudentInternshipState extends State<StudentInternship> {
                             ),
                         ],
                       ),
-                    if (_selectedOption == "past")
+                    if (selectedOption == "past")
                       Column(
                         children: [
                           const SizedBox(height: 15),
                           TextFormField(
-                            controller: _companyNameController,
+                            controller: companyNameController,
                             decoration: const InputDecoration(
                               labelText: 'Company Name',
                             ),
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _fieldController,
+                            controller: fieldController,
                             decoration: const InputDecoration(
                                 labelText: 'Field/Technology'),
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _durationController,
+                            controller: durationController,
                             decoration: const InputDecoration(
                                 labelText: 'Duration (Days)'),
                             keyboardType:
@@ -253,7 +253,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                           ),
                           const SizedBox(height: 5),
                           TextFormField(
-                            controller: _stipendController,
+                            controller: stipendController,
                             decoration: const InputDecoration(
                                 labelText: 'Stipend (or N/A)'),
                           ),
@@ -275,26 +275,26 @@ class _StudentInternshipState extends State<StudentInternship> {
 
                               if (result != null && result.files.isNotEmpty) {
                                 setState(() {
-                                  _certificateFiles = result.files
+                                  certificateFiles = result.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
                                 print(
-                                    'Selected certificate files: ${_certificateFiles.map((file) => file.path).toList()}'); // Debugging
+                                    'Selected certificate files: ${certificateFiles.map((file) => file.path).toList()}'); // Debugging
                               } else {
                                 // User canceled the picker
                               }
                             },
-                            child: const Text(
-                              'Upload Certificates',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Pallet.headingColor,
                               minimumSize: const Size(50, 40),
                             ),
+                            child: const Text(
+                              'Upload Certificates',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                          if (_certificateFiles.isNotEmpty)
+                          if (certificateFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -303,7 +303,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                                   const Text('Selected certificates:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._certificateFiles.map((file) => Text(
+                                  ...certificateFiles.map((file) => Text(
                                       '• ${file.path.split('/').last}',
                                       style: const TextStyle(
                                           fontSize: 12, color: Colors.grey))),
@@ -320,12 +320,12 @@ class _StudentInternshipState extends State<StudentInternship> {
                   child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    _selectedOption = null;
-                    _companyNameController.clear();
-                    _fieldController.clear();
-                    _durationController.clear();
-                    _stipendController.clear();
-                    _certificateFiles.clear();
+                    selectedOption = null;
+                    companyNameController.clear();
+                    fieldController.clear();
+                    durationController.clear();
+                    stipendController.clear();
+                    certificateFiles.clear();
                   },
                 ),
                 TextButton(
@@ -339,7 +339,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                           []; // List to store certificate URLs
 
                       // Upload multiple certificate files
-                      for (File file in _certificateFiles) {
+                      for (File file in certificateFiles) {
                         String? url = await _uploadFileToStorage(
                             studentId: studentDocumentId,
                             file: file,
@@ -350,16 +350,16 @@ class _StudentInternshipState extends State<StudentInternship> {
                         }
                       }
 
-                      String companyName = _companyNameController.text;
-                      String field = _fieldController.text;
-                      String duration = _durationController.text;
-                      String stipend = _stipendController.text;
+                      String companyName = companyNameController.text;
+                      String field = fieldController.text;
+                      String duration = durationController.text;
+                      String stipend = stipendController.text;
 
                       _uploadInternshipData(
                         // Call new function for Internship data
                         studentId: studentDocumentId,
                         type:
-                            _selectedOption!, // _selectedOption is guaranteed to be not null here
+                            selectedOption!, // _selectedOption is guaranteed to be not null here
                         companyName: companyName,
                         field: field,
                         duration: duration,
@@ -369,12 +369,12 @@ class _StudentInternshipState extends State<StudentInternship> {
                       );
 
                       Navigator.of(dialogContext).pop();
-                      _selectedOption = null;
-                      _companyNameController.clear();
-                      _fieldController.clear();
-                      _durationController.clear();
-                      _stipendController.clear();
-                      _certificateFiles.clear();
+                      selectedOption = null;
+                      companyNameController.clear();
+                      fieldController.clear();
+                      durationController.clear();
+                      stipendController.clear();
+                      certificateFiles.clear();
                       _loadInternships(); // Create this function next to reload internships after upload - similar to _loadResearchPapers
                     } else {
                       showSnackBar(context, "Error: User not authenticated.");
@@ -691,7 +691,7 @@ class _StudentInternshipState extends State<StudentInternship> {
         .collection('internship') // Changed collection to 'internship'
         .doc(studentId)
         .collection(type) // Access the 'current' or 'past' subcollection
-        .snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
+        .snapshots();
   }
 
 // 6th block of code to load the data onto page that comes in the form of
@@ -792,9 +792,9 @@ class _StudentInternshipState extends State<StudentInternship> {
         editTechFieldController = // Controller for technology/field
         TextEditingController(text: currentTechField);
 
-    File? _newCertificateFile; // For replacing certificate file
-    bool _deleteExistingCertificateFile = false;
-    List<File> _additionalCertificateFiles =
+    File? newCertificateFile; // For replacing certificate file
+    bool deleteExistingCertificateFile = false;
+    List<File> additionalCertificateFiles =
         []; // For adding multiple certificate files
 
     // Initialize controllers for existing certificate URLs
@@ -906,7 +906,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                     const SizedBox(height: 10),
 
                     // --- Replace Main Certificate File (if needed) ---
-                    if (!_deleteExistingCertificateFile &&
+                    if (!deleteExistingCertificateFile &&
                         currentCertificateUrls.isNotEmpty)
                       Row(
                         children: [
@@ -920,13 +920,13 @@ class _StudentInternshipState extends State<StudentInternship> {
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
-                                _deleteExistingCertificateFile = true;
+                                deleteExistingCertificateFile = true;
                               });
                             },
                           ),
                         ],
                       ),
-                    if (_deleteExistingCertificateFile)
+                    if (deleteExistingCertificateFile)
                       const Text(
                         'Certificate file will be deleted.', // Updated text
                         style: TextStyle(color: Colors.red),
@@ -947,9 +947,9 @@ class _StudentInternshipState extends State<StudentInternship> {
                                   ]); // Common certificate formats
                               if (result != null && result.files.isNotEmpty) {
                                 setState(() {
-                                  _newCertificateFile =
+                                  newCertificateFile =
                                       File(result.files.first.path!);
-                                  _deleteExistingCertificateFile = false;
+                                  deleteExistingCertificateFile = false;
                                 });
                               }
                             },
@@ -978,7 +978,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                                 setState(() {
                                   for (var file in result.files) {
                                     if (file.path != null) {
-                                      _additionalCertificateFiles
+                                      additionalCertificateFiles
                                           .add(File(file.path!));
                                     }
                                   }
@@ -996,16 +996,16 @@ class _StudentInternshipState extends State<StudentInternship> {
                       ],
                     ),
 
-                    if (_newCertificateFile != null)
+                    if (newCertificateFile != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          'New file: ${_newCertificateFile!.path.split('/').last}', // Updated text
+                          'New file: ${newCertificateFile!.path.split('/').last}', // Updated text
                           style:
                               const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ),
-                    if (_additionalCertificateFiles.isNotEmpty)
+                    if (additionalCertificateFiles.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Column(
@@ -1015,7 +1015,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                                 'Added certificate documents:', // Updated text
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.grey)),
-                            ..._additionalCertificateFiles.map((file) => Text(
+                            ...additionalCertificateFiles.map((file) => Text(
                                   '• ${file.path.split('/').last}', // Updated text
                                   style: const TextStyle(
                                       fontSize: 12, color: Colors.grey),
@@ -1051,20 +1051,20 @@ class _StudentInternshipState extends State<StudentInternship> {
                         []; // URLs for added certificates
 
                     // If a new certificate file was selected (replace file button)
-                    if (_newCertificateFile != null) {
+                    if (newCertificateFile != null) {
                       newMainCertificateUrl = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
-                        file: _newCertificateFile!,
+                        file: newCertificateFile!,
                         fileType:
                             'certificate_documents', // Updated fileType for certificates
                       );
-                    } else if (_deleteExistingCertificateFile) {
+                    } else if (deleteExistingCertificateFile) {
                       newMainCertificateUrl =
                           ''; // Set to empty string if main file deleted
                     }
 
                     // Upload additional certificate files and get their URLs
-                    for (var file in _additionalCertificateFiles) {
+                    for (var file in additionalCertificateFiles) {
                       String? url = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
                         file: file,
@@ -1094,7 +1094,7 @@ class _StudentInternshipState extends State<StudentInternship> {
                       updateData['certificateUrl'] = [
                         newMainCertificateUrl
                       ]; // Replace main URL
-                    } else if (_deleteExistingCertificateFile) {
+                    } else if (deleteExistingCertificateFile) {
                       updateData['certificateUrl'] =
                           []; // Set to empty if deleted
                     } else {

@@ -180,11 +180,11 @@ class StudentListPage extends StatefulWidget {
   final String departmentName;
 
   const StudentListPage({
-    Key? key,
+    super.key,
     required this.year,
     required this.section,
     required this.departmentName,
-  }) : super(key: key);
+  });
 
   @override
   State<StudentListPage> createState() => _StudentListPageState();

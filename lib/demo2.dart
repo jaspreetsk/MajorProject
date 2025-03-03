@@ -21,9 +21,9 @@ class StudentResearchPaper extends StatefulWidget {
 
 class _StudentResearchPaperState extends State<StudentResearchPaper> {
   String? _selectedOption;
-  TextEditingController _headingController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _linkController = TextEditingController();
+  final TextEditingController _headingController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -413,11 +413,11 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
     TextEditingController editLinkController =
         TextEditingController(text: currentLink);
 
-    File? _newFile;
-    bool _deleteExistingFile = false;
+    File? newFile;
+    bool deleteExistingFile = false;
     // Lists to store additional files and their controllers
-    List<File> _additionalDocumentFiles = [];
-    List<File> _additionalResearchPaperFiles = [];
+    List<File> additionalDocumentFiles = [];
+    List<File> additionalResearchPaperFiles = [];
 
     // Initialize controllers for existing document URLs
     List<TextEditingController> documentUrlControllers = currentDocumentUrls
@@ -557,7 +557,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                     // Just clarify in comments the purpose of this "Replace File" functionality in the context of multiple URLs.
 
                     // Display current file (if exists and not marked for deletion)
-                    if (!_deleteExistingFile &&
+                    if (!deleteExistingFile &&
                         currentDocumentUrls.isNotEmpty &&
                         researchType == 'current')
                       Row(
@@ -572,13 +572,13 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
-                                _deleteExistingFile = true;
+                                deleteExistingFile = true;
                               });
                             },
                           ),
                         ],
                       ),
-                    if (!_deleteExistingFile &&
+                    if (!deleteExistingFile &&
                         currentResearchPaperUrls.isNotEmpty &&
                         researchType ==
                             'past') // Show for past only if existing and not marked for deletion
@@ -594,13 +594,13 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
-                                _deleteExistingFile = true;
+                                deleteExistingFile = true;
                               });
                             },
                           ),
                         ],
                       ),
-                    if (_deleteExistingFile)
+                    if (deleteExistingFile)
                       const Text(
                         'File will be deleted.',
                         style: TextStyle(color: Colors.red),
@@ -623,8 +623,8 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 );
                                 if (result != null && result.files.isNotEmpty) {
                                   setState(() {
-                                    _newFile = File(result.files.first.path!);
-                                    _deleteExistingFile = false;
+                                    newFile = File(result.files.first.path!);
+                                    deleteExistingFile = false;
                                   });
                                 }
                               },
@@ -653,7 +653,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                   setState(() {
                                     for (var file in result.files) {
                                       if (file.path != null) {
-                                        _additionalDocumentFiles
+                                        additionalDocumentFiles
                                             .add(File(file.path!));
                                       }
                                     }
@@ -683,8 +683,8 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                     .pickFiles(/* ... */);
                                 if (result != null && result.files.isNotEmpty) {
                                   setState(() {
-                                    _newFile = File(result.files.first.path!);
-                                    _deleteExistingFile = false;
+                                    newFile = File(result.files.first.path!);
+                                    deleteExistingFile = false;
                                   });
                                 }
                               },
@@ -708,7 +708,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                   setState(() {
                                     for (var file in result.files) {
                                       if (file.path != null) {
-                                        _additionalResearchPaperFiles
+                                        additionalResearchPaperFiles
                                             .add(File(file.path!));
                                       }
                                     }
@@ -726,16 +726,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         ],
                       ),
 
-                    if (_newFile != null)
+                    if (newFile != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          'New file: ${_newFile!.path.split('/').last}',
+                          'New file: ${newFile!.path.split('/').last}',
                           style:
                               const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ),
-                    if (_additionalDocumentFiles.isNotEmpty &&
+                    if (additionalDocumentFiles.isNotEmpty &&
                         researchType == 'current') // Display added files
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -745,7 +745,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             const Text('Added documents:',
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.grey)),
-                            ..._additionalDocumentFiles.map((file) => Text(
+                            ...additionalDocumentFiles.map((file) => Text(
                                   '• ${file.path.split('/').last}',
                                   style: const TextStyle(
                                       fontSize: 12, color: Colors.grey),
@@ -754,7 +754,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         ),
                       ),
 
-                    if (_additionalResearchPaperFiles.isNotEmpty &&
+                    if (additionalResearchPaperFiles.isNotEmpty &&
                         researchType ==
                             'past') // Display added research paper documents
                       Padding(
@@ -766,7 +766,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             const Text('Added research paper documents:',
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.grey)),
-                            ..._additionalResearchPaperFiles.map((file) => Text(
+                            ...additionalResearchPaperFiles.map((file) => Text(
                                 '• ${file.path.split('/').last}',
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.grey))),
@@ -796,15 +796,15 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         []; // URLs for added supporting docs
                     List<String> newAdditionalResearchPaperUrls = [];
                     // If a new file was selected (replace file button)
-                    if (_newFile != null) {
+                    if (newFile != null) {
                       newMainFileUrl = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
-                        file: _newFile!,
+                        file: newFile!,
                         fileType: researchType == 'current'
                             ? 'supporting_documents'
                             : 'research_papers',
                       );
-                    } else if (_deleteExistingFile) {
+                    } else if (deleteExistingFile) {
                       newMainFileUrl =
                           ''; // Set to empty string if main file deleted
                       // Existing file deletion from storage is handled in the update logic if needed (see _deleteResearchPaper modification in previous response)
@@ -812,7 +812,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
                     // Upload additional files and get their URLs
 
-                    for (var file in _additionalDocumentFiles) {
+                    for (var file in additionalDocumentFiles) {
                       String? url = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
                         file: file,
@@ -823,7 +823,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                       }
                     }
 
-                    for (var file in _additionalResearchPaperFiles) {
+                    for (var file in additionalResearchPaperFiles) {
                       String? url = await _uploadFileToStorage(
                         studentId: auth.currentUser!.uid,
                         file: file,
@@ -845,7 +845,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         updateData['documentUrl'] = [
                           newMainFileUrl
                         ]; // Replace with list containing new URL (if replaced) - Assuming Replace Main File means replace the *first* document URL
-                      } else if (_deleteExistingFile) {
+                      } else if (deleteExistingFile) {
                         updateData['documentUrl'] =
                             []; // Set to empty list if main doc deleted
                       } else {
@@ -876,7 +876,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         updateData['researchPaperUrl'] = [
                           newMainFileUrl
                         ]; // Replace with list containing new URL (if replaced) - Assuming Replace Main Research Paper means replace the *first* research paper URL
-                      } else if (_deleteExistingFile) {
+                      } else if (deleteExistingFile) {
                         updateData['researchPaperUrl'] =
                             []; // Set to empty list if main research paper deleted
                       } else {
@@ -942,14 +942,14 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
   }
 
   void _showUploadDialog(BuildContext context) {
-    String? _selectedOption;
-    final TextEditingController _headingController = TextEditingController();
-    final TextEditingController _descriptionController =
+    String? selectedOption;
+    final TextEditingController headingController = TextEditingController();
+    final TextEditingController descriptionController =
         TextEditingController();
-    final TextEditingController _linkController = TextEditingController();
-    List<File> _supportingDocumentFiles =
+    final TextEditingController linkController = TextEditingController();
+    List<File> supportingDocumentFiles =
         []; // Use list to store multiple files
-    List<File> _researchPaperFiles = [];
+    List<File> researchPaperFiles = [];
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -964,7 +964,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                     DropdownButtonFormField<String>(
                       decoration:
                           const InputDecoration(labelText: 'Select Option'),
-                      value: _selectedOption,
+                      value: selectedOption,
                       items: const [
                         DropdownMenuItem(
                           value: "current",
@@ -977,18 +977,18 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                       ],
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedOption = newValue;
+                          selectedOption = newValue;
                         });
                       },
                     ),
-                    if (_selectedOption == "current")
+                    if (selectedOption == "current")
                       Column(
                         children: [
                           const SizedBox(
                             height: 15,
                           ),
                           TextFormField(
-                            controller: _headingController,
+                            controller: headingController,
                             decoration: const InputDecoration(
                               labelText: 'Heading',
                             ),
@@ -997,7 +997,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             height: 5,
                           ),
                           TextFormField(
-                            controller: _descriptionController,
+                            controller: descriptionController,
                             decoration:
                                 const InputDecoration(labelText: 'Description'),
                             maxLines: 3,
@@ -1021,7 +1021,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
                               if (result != null && result.files.isNotEmpty) {
                                 setState(() {
-                                  _supportingDocumentFiles = result.files
+                                  supportingDocumentFiles = result.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
@@ -1029,16 +1029,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 // User canceled the picker
                               }
                             },
-                            child: const Text(
-                              'Upload Supporting Documents',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Pallet.headingColor,
                               minimumSize: const Size(50, 40),
                             ),
+                            child: const Text(
+                              'Upload Supporting Documents',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                          if (_supportingDocumentFiles.isNotEmpty)
+                          if (supportingDocumentFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -1047,7 +1047,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                   const Text('Selected supporting documents:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._supportingDocumentFiles.map((file) =>
+                                  ...supportingDocumentFiles.map((file) =>
                                       Text('• ${file.path.split('/').last}',
                                           style: const TextStyle(
                                               fontSize: 12,
@@ -1057,14 +1057,14 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             ),
                         ],
                       ),
-                    if (_selectedOption == "past")
+                    if (selectedOption == "past")
                       Column(
                         children: [
                           const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
-                            controller: _headingController,
+                            controller: headingController,
                             decoration:
                                 const InputDecoration(labelText: 'Heading'),
                           ),
@@ -1072,7 +1072,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             height: 10,
                           ),
                           TextFormField(
-                            controller: _linkController,
+                            controller: linkController,
                             decoration: const InputDecoration(
                                 labelText: 'Link of Published Research Paper'),
                           ),
@@ -1094,7 +1094,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
                               if (result != null && result.files.isNotEmpty) {
                                 setState(() {
-                                  _researchPaperFiles = result.files
+                                  researchPaperFiles = result.files
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
@@ -1102,15 +1102,15 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 // User canceled the picker
                               }
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Pallet.headingColor,
+                            ),
                             child: const Text(
                               'Upload Research Paper',
                               style: TextStyle(color: Colors.white),
                             ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Pallet.headingColor,
-                            ),
                           ),
-                          if (_researchPaperFiles.isNotEmpty)
+                          if (researchPaperFiles.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Column(
@@ -1119,7 +1119,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                   const Text('Selected research papers:',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.grey)),
-                                  ..._researchPaperFiles.map((file) => Text(
+                                  ...researchPaperFiles.map((file) => Text(
                                       '• ${file.path.split('/').last}',
                                       style: const TextStyle(
                                           fontSize: 12, color: Colors.grey))),
@@ -1136,11 +1136,11 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                   child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    _selectedOption =
+                    selectedOption =
                         null; // Reset selected option when dialog is closed
-                    _headingController.clear();
-                    _descriptionController.clear();
-                    _linkController.clear();
+                    headingController.clear();
+                    descriptionController.clear();
+                    linkController.clear();
                     _supportingDocumentFile = null;
                     _researchPaperFile = null;
                   },
@@ -1157,9 +1157,9 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                           []; // List to store URLs
                       List<String> researchPaperUrls = []; // List to store URLs
 
-                      if (_selectedOption == "current") {
+                      if (selectedOption == "current") {
                         // Upload multiple supporting documents
-                        for (File file in _supportingDocumentFiles) {
+                        for (File file in supportingDocumentFiles) {
                           String? url = await _uploadFileToStorage(
                               studentId: studentDocumentId,
                               file: file,
@@ -1169,8 +1169,8 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                           }
                         }
 
-                        String heading = _headingController.text;
-                        String description = _descriptionController.text;
+                        String heading = headingController.text;
+                        String description = descriptionController.text;
                         _uploadResearchData(
                           studentId: studentDocumentId,
                           type: "current",
@@ -1178,9 +1178,9 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                           description: description,
                           documentUrls: supportingDocumentUrls, // Pass URL list
                         );
-                      } else if (_selectedOption == "past") {
+                      } else if (selectedOption == "past") {
                         // Upload multiple research papers
-                        for (File file in _researchPaperFiles) {
+                        for (File file in researchPaperFiles) {
                           String? url = await _uploadFileToStorage(
                               studentId: studentDocumentId,
                               file: file,
@@ -1189,8 +1189,8 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             researchPaperUrls.add(url);
                           }
                         }
-                        String heading = _headingController.text;
-                        String link = _linkController.text;
+                        String heading = headingController.text;
+                        String link = linkController.text;
                         _uploadResearchData(
                           studentId: studentDocumentId,
                           type: "past",
@@ -1200,13 +1200,13 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         );
                       }
                       Navigator.of(dialogContext).pop();
-                      _selectedOption = null;
-                      _headingController.clear();
-                      _descriptionController.clear();
-                      _linkController.clear();
-                      _supportingDocumentFiles
+                      selectedOption = null;
+                      headingController.clear();
+                      descriptionController.clear();
+                      linkController.clear();
+                      supportingDocumentFiles
                           .clear(); // Clear file list on submit
-                      _researchPaperFiles.clear(); // Clear file list on submit
+                      researchPaperFiles.clear(); // Clear file list on submit
                       _loadResearchPapers(); // Reload research papers after upload
                     } else {
                       showSnackBar(context, "Error: User not authenticated.");
@@ -1351,6 +1351,6 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
         .collection('research paper')
         .doc(studentId)
         .collection(type) // Access the 'current' or 'past' subcollection
-        .snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
+        .snapshots();
   }
 }

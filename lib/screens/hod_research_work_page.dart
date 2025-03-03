@@ -256,8 +256,8 @@ class HodViewStudentResearchWorkPage extends StatefulWidget {
   final String studentId;
   final String studentName;
 
-  HodViewStudentResearchWorkPage(
-      {required this.studentId, required this.studentName});
+  const HodViewStudentResearchWorkPage(
+      {super.key, required this.studentId, required this.studentName});
 
   @override
   _HodViewStudentResearchWorkPageState createState() =>
