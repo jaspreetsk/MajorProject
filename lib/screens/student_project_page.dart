@@ -540,44 +540,37 @@ class _StudentProjectState extends State<StudentProject> {
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey)),
-                                        ...videoUrls
-                                            .map((videoUrl) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 4.0,
-                                                          left: 8.0),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      if (videoUrl != null &&
-                                                          videoUrl
-                                                              .toString()
-                                                              .isNotEmpty) {
-                                                        final Uri uri =
-                                                            Uri.parse(videoUrl
-                                                                .toString());
-                                                        if (await canLaunchUrl(
-                                                            uri)) {
-                                                          launchUrl(uri);
-                                                        } else {
-                                                          showSnackBar(context,
-                                                              'Could not launch URL: $videoUrl');
-                                                        }
-                                                      }
-                                                    },
-                                                    child: Text(
-                                                      'Video ${videoUrls.indexOf(videoUrl) + 1}: View Video',
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Color(0XFF799ACC),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                    ),
-                                                  ),
-                                                ))
-                                            ,
+                                        ...videoUrls.map((videoUrl) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 4.0, left: 8.0),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  if (videoUrl != null &&
+                                                      videoUrl
+                                                          .toString()
+                                                          .isNotEmpty) {
+                                                    final Uri uri = Uri.parse(
+                                                        videoUrl.toString());
+                                                    if (await canLaunchUrl(
+                                                        uri)) {
+                                                      launchUrl(uri);
+                                                    } else {
+                                                      showSnackBar(context,
+                                                          'Could not launch URL: $videoUrl');
+                                                    }
+                                                  }
+                                                },
+                                                child: Text(
+                                                  'Video ${videoUrls.indexOf(videoUrl) + 1}: View Video',
+                                                  style: const TextStyle(
+                                                      color: Color(0XFF799ACC),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline),
+                                                ),
+                                              ),
+                                            )),
                                       ],
                                     ),
                                   if (documentUrls.isNotEmpty)
@@ -589,44 +582,37 @@ class _StudentProjectState extends State<StudentProject> {
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey)),
-                                        ...documentUrls
-                                            .map((docUrl) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 4.0,
-                                                          left: 8.0),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      if (docUrl != null &&
-                                                          docUrl
-                                                              .toString()
-                                                              .isNotEmpty) {
-                                                        final Uri uri =
-                                                            Uri.parse(docUrl
-                                                                .toString());
-                                                        if (await canLaunchUrl(
-                                                            uri)) {
-                                                          launchUrl(uri);
-                                                        } else {
-                                                          showSnackBar(context,
-                                                              'Could not launch URL: $docUrl');
-                                                        }
-                                                      }
-                                                    },
-                                                    child: Text(
-                                                      'Document ${documentUrls.indexOf(docUrl) + 1}: View Document',
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Color(0XFF799ACC),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                    ),
-                                                  ),
-                                                ))
-                                            ,
+                                        ...documentUrls.map((docUrl) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 4.0, left: 8.0),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  if (docUrl != null &&
+                                                      docUrl
+                                                          .toString()
+                                                          .isNotEmpty) {
+                                                    final Uri uri = Uri.parse(
+                                                        docUrl.toString());
+                                                    if (await canLaunchUrl(
+                                                        uri)) {
+                                                      launchUrl(uri);
+                                                    } else {
+                                                      showSnackBar(context,
+                                                          'Could not launch URL: $docUrl');
+                                                    }
+                                                  }
+                                                },
+                                                child: Text(
+                                                  'Document ${documentUrls.indexOf(docUrl) + 1}: View Document',
+                                                  style: const TextStyle(
+                                                      color: Color(0XFF799ACC),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline),
+                                                ),
+                                              ),
+                                            )),
                                       ],
                                     ),
                                   if (photoUrls.isNotEmpty)
@@ -638,44 +624,37 @@ class _StudentProjectState extends State<StudentProject> {
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey)),
-                                        ...photoUrls
-                                            .map((photoUrl) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 4.0,
-                                                          left: 8.0),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      if (photoUrl != null &&
-                                                          photoUrl
-                                                              .toString()
-                                                              .isNotEmpty) {
-                                                        final Uri uri =
-                                                            Uri.parse(photoUrl
-                                                                .toString());
-                                                        if (await canLaunchUrl(
-                                                            uri)) {
-                                                          launchUrl(uri);
-                                                        } else {
-                                                          showSnackBar(context,
-                                                              'Could not launch URL: $photoUrl');
-                                                        }
-                                                      }
-                                                    },
-                                                    child: Text(
-                                                      'Photo ${photoUrls.indexOf(photoUrl) + 1}: View Photo',
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Color(0XFF799ACC),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                    ),
-                                                  ),
-                                                ))
-                                            ,
+                                        ...photoUrls.map((photoUrl) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 4.0, left: 8.0),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  if (photoUrl != null &&
+                                                      photoUrl
+                                                          .toString()
+                                                          .isNotEmpty) {
+                                                    final Uri uri = Uri.parse(
+                                                        photoUrl.toString());
+                                                    if (await canLaunchUrl(
+                                                        uri)) {
+                                                      launchUrl(uri);
+                                                    } else {
+                                                      showSnackBar(context,
+                                                          'Could not launch URL: $photoUrl');
+                                                    }
+                                                  }
+                                                },
+                                                child: Text(
+                                                  'Photo ${photoUrls.indexOf(photoUrl) + 1}: View Photo',
+                                                  style: const TextStyle(
+                                                      color: Color(0XFF799ACC),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline),
+                                                ),
+                                              ),
+                                            )),
                                       ],
                                     ),
                                 ],
@@ -819,8 +798,6 @@ class _StudentProjectState extends State<StudentProject> {
             } catch (storageError) {
               // Log storage deletion error, but continue with Firestore document deletion
               // Consider adding more robust error handling/user feedback if needed.
-              print(
-                  "Storage deletion error for URL: $mediaUrl - Error: $storageError"); // More specific log
             }
           }
         }
@@ -845,282 +822,314 @@ class _StudentProjectState extends State<StudentProject> {
 // 8th block of code to edit the card
 
   void _showEditProjectDialog(BuildContext context,
-    DocumentSnapshot<Map<String, dynamic>> document, String projectType) {
-  // Get current field values - Project specific fields
-  String currentProjectTitle = document.data()?['projectTitle'] ?? '';
-  String currentProjectDescription = document.data()?['projectDescription'] ?? '';
+      DocumentSnapshot<Map<String, dynamic>> document, String projectType) {
+    // Get current field values - Project specific fields
+    String currentProjectTitle = document.data()?['projectTitle'] ?? '';
+    String currentProjectDescription =
+        document.data()?['projectDescription'] ?? '';
 
-  // Fetch lists of media URLs
-  List<dynamic> currentVideoUrlsDynamic = document.data()?['videoUrl'] ?? [];
-  List<dynamic> currentDocumentUrlsDynamic = document.data()?['documentUrl'] ?? [];
-  List<dynamic> currentPhotoUrlsDynamic = document.data()?['photoUrl'] ?? [];
+    // Fetch lists of media URLs
+    List<dynamic> currentVideoUrlsDynamic = document.data()?['videoUrl'] ?? [];
+    List<dynamic> currentDocumentUrlsDynamic =
+        document.data()?['documentUrl'] ?? [];
+    List<dynamic> currentPhotoUrlsDynamic = document.data()?['photoUrl'] ?? [];
 
-  List<String> currentVideoUrls = currentVideoUrlsDynamic.cast<String>().toList();
-  List<String> currentDocumentUrls = currentDocumentUrlsDynamic.cast<String>().toList();
-  List<String> currentPhotoUrls = currentPhotoUrlsDynamic.cast<String>().toList();
+    List<String> currentVideoUrls =
+        currentVideoUrlsDynamic.cast<String>().toList();
+    List<String> currentDocumentUrls =
+        currentDocumentUrlsDynamic.cast<String>().toList();
+    List<String> currentPhotoUrls =
+        currentPhotoUrlsDynamic.cast<String>().toList();
 
-  // Controllers pre-populated with current values - Project specific
-  TextEditingController editProjectTitleController =
-      TextEditingController(text: currentProjectTitle);
-  TextEditingController editProjectDescriptionController =
-      TextEditingController(text: currentProjectDescription);
+    // Controllers pre-populated with current values - Project specific
+    TextEditingController editProjectTitleController =
+        TextEditingController(text: currentProjectTitle);
+    TextEditingController editProjectDescriptionController =
+        TextEditingController(text: currentProjectDescription);
 
-  // Initialize controllers for existing media URLs and lists to track URLs to be deleted
-  List<TextEditingController> videoUrlControllers =
-      currentVideoUrls.map((url) => TextEditingController(text: url)).toList();
-  List<TextEditingController> documentUrlControllers =
-      currentDocumentUrls.map((url) => TextEditingController(text: url)).toList();
-  List<TextEditingController> photoUrlControllers =
-      currentPhotoUrls.map((url) => TextEditingController(text: url)).toList();
+    // Initialize controllers for existing media URLs and lists to track URLs to be deleted
+    List<TextEditingController> videoUrlControllers = currentVideoUrls
+        .map((url) => TextEditingController(text: url))
+        .toList();
+    List<TextEditingController> documentUrlControllers = currentDocumentUrls
+        .map((url) => TextEditingController(text: url))
+        .toList();
+    List<TextEditingController> photoUrlControllers = currentPhotoUrls
+        .map((url) => TextEditingController(text: url))
+        .toList();
 
-  List<String> deletedVideoUrls = []; // List to track video URLs to delete
-  List<String> deletedDocumentUrls = []; // List to track document URLs to delete
-  List<String> deletedPhotoUrls = []; // List to track photo URLs to delete
+    List<String> deletedVideoUrls = []; // List to track video URLs to delete
+    List<String> deletedDocumentUrls =
+        []; // List to track document URLs to delete
+    List<String> deletedPhotoUrls = []; // List to track photo URLs to delete
 
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Edit Project Details'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Editable Project Title
+                    TextField(
+                      controller: editProjectTitleController,
+                      decoration:
+                          const InputDecoration(labelText: 'Project Title'),
+                    ),
+                    const SizedBox(height: 10),
 
-  showDialog(
-    context: context,
-    builder: (BuildContext dialogContext) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            title: const Text('Edit Project Details'),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Editable Project Title
-                  TextField(
-                    controller: editProjectTitleController,
-                    decoration: const InputDecoration(labelText: 'Project Title'),
-                  ),
-                  const SizedBox(height: 10),
+                    // Editable Project Description
+                    TextField(
+                      controller: editProjectDescriptionController,
+                      decoration: const InputDecoration(
+                          labelText: 'Project Description'),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 20),
 
-                  // Editable Project Description
-                  TextField(
-                    controller: editProjectDescriptionController,
-                    decoration: const InputDecoration(labelText: 'Project Description'),
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // --- Section for Video URLs ---
-                  const Text("Video URLs:", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ...List.generate(
-                    videoUrlControllers.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: videoUrlControllers[index],
-                              decoration: InputDecoration(labelText: 'Video URL ${index + 1}'),
+                    // --- Section for Video URLs ---
+                    const Text("Video URLs:",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    ...List.generate(
+                      videoUrlControllers.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: videoUrlControllers[index],
+                                decoration: InputDecoration(
+                                    labelText: 'Video URL ${index + 1}'),
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              String urlToDelete = videoUrlControllers[index].text;
-                              if (currentVideoUrls.contains(urlToDelete)) {
-                                deletedVideoUrls.add(urlToDelete); // Add to deleted URLs list
-                              }
-                              setState(() {
-                                videoUrlControllers.removeAt(index);
-                              });
-                            },
-                          ),
-                        ],
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                String urlToDelete =
+                                    videoUrlControllers[index].text;
+                                if (currentVideoUrls.contains(urlToDelete)) {
+                                  deletedVideoUrls.add(
+                                      urlToDelete); // Add to deleted URLs list
+                                }
+                                setState(() {
+                                  videoUrlControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        videoUrlControllers.add(TextEditingController());
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallet.headingColor),
-                    child: const Text('Add Video URL', style: TextStyle(color: Colors.white)),
-                  ),
-                  const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          videoUrlControllers.add(TextEditingController());
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallet.headingColor),
+                      child: const Text('Add Video URL',
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 10),
 
-                  // --- Section for Document URLs ---
-                  const Text("Document URLs:", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ...List.generate(
-                    documentUrlControllers.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: documentUrlControllers[index],
-                              decoration: InputDecoration(labelText: 'Document URL ${index + 1}'),
+                    // --- Section for Document URLs ---
+                    const Text("Document URLs:",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    ...List.generate(
+                      documentUrlControllers.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: documentUrlControllers[index],
+                                decoration: InputDecoration(
+                                    labelText: 'Document URL ${index + 1}'),
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              String urlToDelete = documentUrlControllers[index].text;
-                              if (currentDocumentUrls.contains(urlToDelete)) {
-                                deletedDocumentUrls.add(urlToDelete); // Add to deleted URLs list
-                              }
-                              setState(() {
-                                documentUrlControllers.removeAt(index);
-                              });
-                            },
-                          ),
-                        ],
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                String urlToDelete =
+                                    documentUrlControllers[index].text;
+                                if (currentDocumentUrls.contains(urlToDelete)) {
+                                  deletedDocumentUrls.add(
+                                      urlToDelete); // Add to deleted URLs list
+                                }
+                                setState(() {
+                                  documentUrlControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        documentUrlControllers.add(TextEditingController());
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallet.headingColor),
-                    child: const Text('Add Document URL', style: TextStyle(color: Colors.white)),
-                  ),
-                  const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          documentUrlControllers.add(TextEditingController());
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallet.headingColor),
+                      child: const Text('Add Document URL',
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 10),
 
-                  // --- Section for Photo URLs ---
-                  const Text("Photo URLs:", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ...List.generate(
-                    photoUrlControllers.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: photoUrlControllers[index],
-                              decoration: InputDecoration(labelText: 'Photo URL ${index + 1}'),
+                    // --- Section for Photo URLs ---
+                    const Text("Photo URLs:",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    ...List.generate(
+                      photoUrlControllers.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: photoUrlControllers[index],
+                                decoration: InputDecoration(
+                                    labelText: 'Photo URL ${index + 1}'),
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              String urlToDelete = photoUrlControllers[index].text;
-                              if (currentPhotoUrls.contains(urlToDelete)) {
-                                deletedPhotoUrls.add(urlToDelete); // Add to deleted URLs list
-                              }
-                              setState(() {
-                                photoUrlControllers.removeAt(index);
-                              });
-                            },
-                          ),
-                        ],
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                String urlToDelete =
+                                    photoUrlControllers[index].text;
+                                if (currentPhotoUrls.contains(urlToDelete)) {
+                                  deletedPhotoUrls.add(
+                                      urlToDelete); // Add to deleted URLs list
+                                }
+                                setState(() {
+                                  photoUrlControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        photoUrlControllers.add(TextEditingController());
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallet.headingColor),
-                    child: const Text('Add Photo URL', style: TextStyle(color: Colors.white)),
-                  ),
-                  const SizedBox(height: 10),
-
-
-                ],
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          photoUrlControllers.add(TextEditingController());
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallet.headingColor),
+                      child: const Text('Add Photo URL',
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  // Get updated values - Project specific
-                  String updatedProjectTitle = editProjectTitleController.text.trim();
-                  String updatedProjectDescription = editProjectDescriptionController.text.trim();
-                  List<String> updatedVideoUrls = videoUrlControllers.map((c) => c.text.trim()).where((url) => url.isNotEmpty).toList();
-                  List<String> updatedDocumentUrls = documentUrlControllers.map((c) => c.text.trim()).where((url) => url.isNotEmpty).toList();
-                  List<String> updatedPhotoUrls = photoUrlControllers.map((c) => c.text.trim()).where((url) => url.isNotEmpty).toList();
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    // Get updated values - Project specific
+                    String updatedProjectTitle =
+                        editProjectTitleController.text.trim();
+                    String updatedProjectDescription =
+                        editProjectDescriptionController.text.trim();
+                    List<String> updatedVideoUrls = videoUrlControllers
+                        .map((c) => c.text.trim())
+                        .where((url) => url.isNotEmpty)
+                        .toList();
+                    List<String> updatedDocumentUrls = documentUrlControllers
+                        .map((c) => c.text.trim())
+                        .where((url) => url.isNotEmpty)
+                        .toList();
+                    List<String> updatedPhotoUrls = photoUrlControllers
+                        .map((c) => c.text.trim())
+                        .where((url) => url.isNotEmpty)
+                        .toList();
 
+                    // --- Build the update data map --- - Project specific fields
+                    Map<String, dynamic> updateData = {};
+                    updateData['projectTitle'] = updatedProjectTitle;
+                    updateData['projectDescription'] =
+                        updatedProjectDescription;
+                    updateData['videoUrl'] = updatedVideoUrls;
+                    updateData['documentUrl'] = updatedDocumentUrls;
+                    updateData['photoUrl'] = updatedPhotoUrls;
 
-                  // --- Build the update data map --- - Project specific fields
-                  Map<String, dynamic> updateData = {};
-                  updateData['projectTitle'] = updatedProjectTitle;
-                  updateData['projectDescription'] = updatedProjectDescription;
-                  updateData['videoUrl'] = updatedVideoUrls;
-                  updateData['documentUrl'] = updatedDocumentUrls;
-                  updateData['photoUrl'] = updatedPhotoUrls;
+                    String studentId = auth.currentUser!.uid;
+                    String oldDocId =
+                        currentProjectTitle; // Use projectTitle as doc ID
 
-                  String studentId = auth.currentUser!.uid;
-                  String oldDocId = currentProjectTitle; // Use projectTitle as doc ID
+                    // Option B: Create a new document if the projectTitle (document ID) has changed.
+                    if (updatedProjectTitle != currentProjectTitle) {
+                      // Create new document with updated projectTitle
+                      await firestore
+                          .collection('projects')
+                          .doc(studentId)
+                          .collection(projectType)
+                          .doc(updatedProjectTitle)
+                          .set(updateData);
+                      // Delete the old document
+                      await firestore
+                          .collection('projects')
+                          .doc(studentId)
+                          .collection(projectType)
+                          .doc(oldDocId)
+                          .delete();
+                    } else {
+                      // If the projectTitle remains the same, update in place
+                      await firestore
+                          .collection('projects')
+                          .doc(studentId)
+                          .collection(projectType)
+                          .doc(oldDocId)
+                          .update(updateData);
+                    }
 
-                  // Option B: Create a new document if the projectTitle (document ID) has changed.
-                  if (updatedProjectTitle != currentProjectTitle) {
-                    // Create new document with updated projectTitle
-                    await firestore
-                        .collection('projects')
-                        .doc(studentId)
-                        .collection(projectType)
-                        .doc(updatedProjectTitle)
-                        .set(updateData);
-                    // Delete the old document
-                    await firestore
-                        .collection('projects')
-                        .doc(studentId)
-                        .collection(projectType)
-                        .doc(oldDocId)
-                        .delete();
-                  } else {
-                    // If the projectTitle remains the same, update in place
-                    await firestore
-                        .collection('projects')
-                        .doc(studentId)
-                        .collection(projectType)
-                        .doc(oldDocId)
-                        .update(updateData);
-                  }
+                    // Delete removed media files from storage
+                    await _deleteMediaFilesFromStorage(deletedVideoUrls);
+                    await _deleteMediaFilesFromStorage(deletedDocumentUrls);
+                    await _deleteMediaFilesFromStorage(deletedPhotoUrls);
 
-                  // Delete removed media files from storage
-                  await _deleteMediaFilesFromStorage(deletedVideoUrls);
-                  await _deleteMediaFilesFromStorage(deletedDocumentUrls);
-                  await _deleteMediaFilesFromStorage(deletedPhotoUrls);
+                    Navigator.of(dialogContext).pop();
+                    _loadProjects(); // Refresh project list
+                  },
+                  child: const Text('Update'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
-
-                  Navigator.of(dialogContext).pop();
-                  _loadProjects(); // Refresh project list
-                },
-                child: const Text('Update'),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
-
-Future<void> _deleteMediaFilesFromStorage(List<String> urls) async {
-  for (String url in urls) {
-    if (url.isNotEmpty) {
-      try {
-        Reference fileRef = FirebaseStorage.instance.refFromURL(url);
-        await fileRef.delete();
-        print('Successfully deleted file from storage: $url');
-      } catch (e) {
-        print('Error deleting file from storage: $url - $e');
-        // Consider adding more robust error handling, like showing a SnackBar
-        // if media deletion fails, or retry mechanism.
+  Future<void> _deleteMediaFilesFromStorage(List<String> urls) async {
+    for (String url in urls) {
+      if (url.isNotEmpty) {
+        try {
+          Reference fileRef = FirebaseStorage.instance.refFromURL(url);
+          await fileRef.delete();
+        } catch (e) {
+          // Consider adding more robust error handling, like showing a SnackBar
+          // if media deletion fails, or retry mechanism.
+        }
       }
     }
   }
-}
 }

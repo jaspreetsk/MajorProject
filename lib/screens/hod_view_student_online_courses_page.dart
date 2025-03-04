@@ -95,22 +95,16 @@ class _HodViewStudentOnlineCoursesPageState
       stream: coursesStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          print("Stream Error ($courseType): ${snapshot.error}");
           return Text('Something went wrong: ${snapshot.error}');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print("Stream Waiting ($courseType)");
           return CircularProgressIndicator();
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          print("No data or empty docs for $courseType");
           return Text("No $courseType online courses uploaded yet.");
         }
-
-        print(
-            "Data received for $courseType, document count: ${snapshot.data!.docs.length}");
 
         return ListView.builder(
           shrinkWrap: true,
@@ -119,9 +113,6 @@ class _HodViewStudentOnlineCoursesPageState
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data!.docs[index];
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
-            print(
-                "Document data for $courseType index $index: $data"); // Print document data
 
             String courseName = data['courseName'] ?? 'No Course Name';
             String duration = data['duration'] ?? 'No Duration';

@@ -34,18 +34,20 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
     try {
       // Access student details from widget.studentDetails
       studentName = widget.studentDetails.get('name') ?? 'Name not found';
-      enrollmentNumber = widget.studentDetails.get('enrollment Number') ?? 'Enrollment # not found';
-      studentDepartment = widget.studentDetails.get('department') ?? 'Department not found';
+      enrollmentNumber = widget.studentDetails.get('enrollment Number') ??
+          'Enrollment # not found';
+      studentDepartment =
+          widget.studentDetails.get('department') ?? 'Department not found';
       studentSemester = widget.studentDetails.get('semester') ?? -1;
 
       if (studentSemester != -1) {
-        await _loadAcademicDetails(studentSemester); // Load academic details after basic student info
+        await _loadAcademicDetails(
+            studentSemester); // Load academic details after basic student info
       }
 
       setState(() {
         isLoading = false;
       });
-
     } catch (e) {
       setState(() {
         studentName = 'Error loading data';
@@ -54,7 +56,6 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
         studentSemester = -1;
         isLoading = false;
       });
-      print("Error loading student data: $e");
     }
   }
 
@@ -62,7 +63,8 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
     String docId = 'sem$semester';
     try {
       DocumentSnapshot academicSnapshot = await FirebaseFirestore.instance
-          .collection('Academic Details') // Replace 'academic details' with your collection name if different
+          .collection(
+              'Academic Details') // Replace 'academic details' with your collection name if different
           .doc(docId)
           .get();
 
@@ -71,13 +73,11 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
           academicData = academicSnapshot.data() as Map<String, dynamic>?;
         });
       } else {
-        print('Academic data not found for semester $semester');
         setState(() {
           academicData = null;
         });
       }
     } catch (e) {
-      print('Error loading academic details: $e');
       setState(() {
         academicData = null;
       });
@@ -88,14 +88,39 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
     if (studentSemester == -1) return [];
     if (studentSemester == 1) {
       return [
-        DataColumn(label: Text('Class', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 23))),
-        DataColumn(label: Text('Percentage', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 23))),
+        DataColumn(
+            label: Text('Class',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                    fontSize: 23))),
+        DataColumn(
+            label: Text('Percentage',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                    fontSize: 23))),
       ];
     } else if (studentSemester >= 2 && studentSemester <= 8) {
       return [
-        DataColumn(label: Text('Semester', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 23))),
-        DataColumn(label: Text('SGPA', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 23))),
-        DataColumn(label: Text('CGPA', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 23))),
+        DataColumn(
+            label: Text('Semester',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                    fontSize: 23))),
+        DataColumn(
+            label: Text('SGPA',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                    fontSize: 23))),
+        DataColumn(
+            label: Text('CGPA',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                    fontSize: 23))),
       ];
     }
     return [];
@@ -106,12 +131,28 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
     if (studentSemester == 1) {
       return [
         DataRow(cells: [
-          DataCell(Text('10th', style: TextStyle(color: Pallet.extraColor, fontSize: 18, fontWeight: FontWeight.bold))),
-          DataCell(Text(academicData?['SSC']?.toString() ?? 'N/A', style: TextStyle(color: Pallet.headingColor, fontSize: 18, fontWeight: FontWeight.bold))),
+          DataCell(Text('10th',
+              style: TextStyle(
+                  color: Pallet.extraColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
+          DataCell(Text(academicData?['SSC']?.toString() ?? 'N/A',
+              style: TextStyle(
+                  color: Pallet.headingColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
         ]),
         DataRow(cells: [
-          DataCell(Text('12th', style: TextStyle(color: Pallet.extraColor, fontSize: 18, fontWeight: FontWeight.bold))),
-          DataCell(Text(academicData?['HSC']?.toString() ?? 'N/A', style: TextStyle(color: Pallet.headingColor, fontSize: 18, fontWeight: FontWeight.bold))),
+          DataCell(Text('12th',
+              style: TextStyle(
+                  color: Pallet.extraColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
+          DataCell(Text(academicData?['HSC']?.toString() ?? 'N/A',
+              style: TextStyle(
+                  color: Pallet.headingColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
         ]),
       ];
     } else if (studentSemester >= 2 && studentSemester <= 8) {
@@ -119,9 +160,21 @@ class _HodAcademicDetailsPageState extends State<HodAcademicDetailsPage> {
       for (int i = 1; i < studentSemester; i++) {
         String sem = '$i';
         rows.add(DataRow(cells: [
-          DataCell(Text('Semester $sem', style: TextStyle(color: Pallet.extraColor, fontSize: 18, fontWeight: FontWeight.bold))),
-          DataCell(Text(academicData?['SGPA$sem']?.toString() ?? 'N/A', style: TextStyle(color: Pallet.headingColor, fontSize: 18, fontWeight: FontWeight.bold))),
-          DataCell(Text(academicData?['CGPA$sem']?.toString() ?? 'N/A', style: TextStyle(color: Pallet.headingColor, fontSize: 18, fontWeight: FontWeight.bold))),
+          DataCell(Text('Semester $sem',
+              style: TextStyle(
+                  color: Pallet.extraColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
+          DataCell(Text(academicData?['SGPA$sem']?.toString() ?? 'N/A',
+              style: TextStyle(
+                  color: Pallet.headingColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
+          DataCell(Text(academicData?['CGPA$sem']?.toString() ?? 'N/A',
+              style: TextStyle(
+                  color: Pallet.headingColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))),
         ]));
       }
       return rows;

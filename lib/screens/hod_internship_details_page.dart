@@ -98,22 +98,16 @@ class _HodViewStudentInternshipWorkPageState
       stream: internshipStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          print("Stream Error ($internshipType): ${snapshot.error}");
           return Text('Something went wrong: ${snapshot.error}');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print("Stream Waiting ($internshipType)");
           return CircularProgressIndicator();
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          print("No data or empty docs for $internshipType");
           return Text("No $internshipType internships uploaded yet.");
         }
-
-        print(
-            "Data received for $internshipType, document count: ${snapshot.data!.docs.length}");
 
         return ListView.builder(
           shrinkWrap: true,
@@ -122,9 +116,6 @@ class _HodViewStudentInternshipWorkPageState
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data!.docs[index];
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
-            print(
-                "Document data for $internshipType index $index: $data"); // Print document data
 
             String companyName =
                 data['companyName'] ?? data['CompanyName'] ?? 'No Company Name';
@@ -152,8 +143,6 @@ class _HodViewStudentInternshipWorkPageState
               // Handle case where it might still be a List (from previous data structure)
               certificates = certificateUrlData.cast<
                   dynamic>(); // Cast to dynamic to be safe, or ideally to <String> if you expect URLs
-              print(
-                  "Warning: certificateUrlData was a List. Handling as list, but should be String URL."); // Add a warning log
             }
 
             return Card(

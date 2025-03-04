@@ -103,8 +103,7 @@ class _StudentInternshipState extends State<StudentInternship> {
 
   void _showUploadInternshipDialog(BuildContext context) {
     String? selectedOption;
-    final TextEditingController companyNameController =
-        TextEditingController();
+    final TextEditingController companyNameController = TextEditingController();
     final TextEditingController fieldController = TextEditingController();
     final TextEditingController durationController = TextEditingController();
     final TextEditingController stipendController = TextEditingController();
@@ -194,8 +193,6 @@ class _StudentInternshipState extends State<StudentInternship> {
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
-                                print(
-                                    'Selected certificate files: ${certificateFiles.map((file) => file.path).toList()}'); // Debugging
                               } else {
                                 // User canceled the picker
                               }
@@ -279,8 +276,6 @@ class _StudentInternshipState extends State<StudentInternship> {
                                       .map((e) => File(e.path!))
                                       .toList();
                                 });
-                                print(
-                                    'Selected certificate files: ${certificateFiles.map((file) => file.path).toList()}'); // Debugging
                               } else {
                                 // User canceled the picker
                               }
@@ -424,11 +419,6 @@ class _StudentInternshipState extends State<StudentInternship> {
     String? stipend,
     List<String>? certificateUrls, // List to store certificate URLs
   }) async {
-    print("--- _uploadInternshipData ---");
-    print("Student ID: $studentId, Type: $type, Company Name: $companyName");
-    print(
-        "Field: $field, Duration: $duration, Stipend: $stipend, Certificate URLs: $certificateUrls");
-
     try {
       CollectionReference internshipsCollection = firestore
           .collection('internship'); // Changed collection to 'internship'

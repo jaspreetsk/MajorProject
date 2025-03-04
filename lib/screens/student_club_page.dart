@@ -50,8 +50,6 @@ class _StudentClubState extends State<StudentClub> {
 
             isLoading = false;
           });
-          print(
-              "Student document not found in Firestore"); // Log if document not found
         }
       } else {
         setState(() {
@@ -60,7 +58,6 @@ class _StudentClubState extends State<StudentClub> {
 
           isLoading = false;
         });
-        print("No user logged in."); // Log if no user logged in
       }
     } catch (e) {
       setState(() {
@@ -68,7 +65,6 @@ class _StudentClubState extends State<StudentClub> {
 
         isLoading = false;
       });
-      print("Error loading student data: $e"); // Log error
     }
   }
 

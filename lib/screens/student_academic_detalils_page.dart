@@ -67,8 +67,6 @@ class _StudentAcademicDetalilsPageState
             studentDepartment = 'Data not found';
             studentSemester = -1;
           });
-          print(
-              "Student document not found in Firestore"); // Log if document not found
         }
       } else {
         setState(() {
@@ -79,7 +77,6 @@ class _StudentAcademicDetalilsPageState
           studentSemester = -1;
           isLoading = false;
         });
-        print("No user logged in."); // Log if no user logged in
       }
     } catch (e) {
       setState(() {
@@ -89,7 +86,6 @@ class _StudentAcademicDetalilsPageState
         studentSemester = -1;
         isLoading = false;
       });
-      print("Error loading student data: $e"); // Log error
     }
   }
 
@@ -108,13 +104,12 @@ class _StudentAcademicDetalilsPageState
         });
       } else {
         // Handle case where academic data is not found for this semester
-        print('Academic data not found for semester $semester');
+
         setState(() {
           academicData = null; // Clear existing data if any
         });
       }
     } catch (e) {
-      print('Error loading academic details: $e');
       setState(() {
         academicData = null; // Clear existing data if any
       });
@@ -236,7 +231,6 @@ class _StudentAcademicDetalilsPageState
           )),
         ]));
       }
-      
 
       return rows;
     }

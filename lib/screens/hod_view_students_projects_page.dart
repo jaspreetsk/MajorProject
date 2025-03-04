@@ -96,22 +96,16 @@ class _HodViewStudentProjectsPageState
       stream: projectStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          print("Stream Error ($projectType): ${snapshot.error}");
           return Text('Something went wrong: ${snapshot.error}');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print("Stream Waiting ($projectType)");
           return CircularProgressIndicator();
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          print("No data or empty docs for $projectType");
           return Text("No $projectType projects uploaded yet.");
         }
-
-        print(
-            "Data received for $projectType, document count: ${snapshot.data!.docs.length}");
 
         return ListView.builder(
           shrinkWrap: true,
@@ -120,9 +114,6 @@ class _HodViewStudentProjectsPageState
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data!.docs[index];
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
-            print(
-                "Document data for $projectType index $index: $data"); // Print document data
 
             String projectTitle = data['projectTitle'] ?? 'No Project Title';
             String projectDescription =
