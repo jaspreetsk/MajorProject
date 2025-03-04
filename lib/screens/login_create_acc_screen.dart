@@ -9,9 +9,10 @@ class LoginCreateAccScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffe3ffff),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Pallet.backgroundColor,
+        backgroundColor: Color(0xffe3ffff),
         title: const Text(
           "AcademiaX",
           style: TextStyle(
@@ -24,6 +25,13 @@ class LoginCreateAccScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/images/login.gif',
+              height: 250, // Adjust height as needed
+            ),
+            const SizedBox(
+              height: 60,
+            ),
             // Login Button
             ElevatedButton(
               onPressed: () {
@@ -38,7 +46,7 @@ class LoginCreateAccScreen extends StatelessWidget {
                 "Login",
                 style: TextStyle(
                   fontSize: 25,
-                  color: Pallet.textColor,
+                  color: Color(0xffe3ffff),
                 ),
               ),
             ),
@@ -59,7 +67,7 @@ class LoginCreateAccScreen extends StatelessWidget {
                 "Create Account",
                 style: TextStyle(
                   fontSize: 25,
-                  color: Pallet.textColor,
+                  color: Color(0xffe3ffff),
                 ),
               ),
             ),

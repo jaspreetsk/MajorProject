@@ -412,6 +412,9 @@ class StudentDetailsPage extends StatelessWidget {
               child: const Text('Club Details',
                   style: TextStyle(fontSize: 20, color: Pallet.textColor)),
             ),
+            const SizedBox(
+                height: 50,
+              ),
           ],
         ),
       ),

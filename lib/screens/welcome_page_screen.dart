@@ -69,6 +69,9 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:AppBar(
+        backgroundColor: Pallet.backgroundColor,
+      ) ,
       body: SingleChildScrollView(
         // 1. Wrap Column in SingleChildScrollView
         child: Center(

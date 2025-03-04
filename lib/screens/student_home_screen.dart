@@ -520,6 +520,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               ),
               Text(
                 '$studentName ($enrollmentNumber)',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25,
                   color: Pallet.headingColor,
@@ -645,6 +646,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     color: Pallet.textColor,
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 50,
               ),
             ],
           ),

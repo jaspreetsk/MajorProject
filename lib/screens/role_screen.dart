@@ -68,7 +68,7 @@ class RoleScreen extends StatelessWidget {
                 minimumSize: const Size(200, 60),
               ),
               child: Text(
-                "HOD",
+                "Faculty",
                 style: TextStyle(
                   fontSize: 25,
                   color: Pallet.textColor,
