@@ -66,7 +66,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Current Internships', // Changed text
+                'Current Course', // Changed text
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class _StudnetOnlineCourseState extends State<StudnetOnlineCourse> {
                   onlineCourseType: 'current'),
               const SizedBox(height: 20),
               const Text(
-                'Past Internships', // Changed text
+                'Past Course(s)', // Changed text
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
