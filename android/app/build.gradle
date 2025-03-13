@@ -29,12 +29,14 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.debug // Ensure debug signing exists
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
-    lintOptions {
-        warning 'options'
+    lint {
+        disable 'ObsoleteLintCustomCheck'
     }
 }
 

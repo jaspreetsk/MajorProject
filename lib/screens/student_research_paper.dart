@@ -27,8 +27,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
   FirebaseStorage storage = FirebaseStorage.instance;
   File? _supportingDocumentFile;
   File? _researchPaperFile;
-  String? _hoveredHeadingCurrent;
-  String? _hoveredHeadingPast;
+  // _deleteExistingFile is kept but not used in this version.
   final bool _deleteExistingFile = false;
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? _currentResearchStream;
@@ -101,8 +100,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
               ),
               const SizedBox(height: 10),
               _buildResearchList(
-                  researchStream: _currentResearchStream,
-                  researchType: 'current'),
+                  researchStream: _currentResearchStream, researchType: 'current'),
               const SizedBox(height: 20),
               const Text(
                 'Past Research Papers',
@@ -142,8 +140,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
         return ListView.builder(
           shrinkWrap: true,
-          physics:
-              const NeverScrollableScrollPhysics(), // to disable ListView's own scrolling
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             DocumentSnapshot<Map<String, dynamic>> document =
@@ -151,7 +148,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
             Map<String, dynamic> data = document.data()!;
             String heading = data['heading'] ?? 'No Heading';
             String description = data['description'] ?? 'No Description';
-            String link = data['link'] ?? ''; // Link is only for past papers
+            String link = data['link'] ?? '';
             List<dynamic> documentUrls = data['documentUrl'] is List
                 ? data['documentUrl']
                 : (data['documentUrl'] != null ? [data['documentUrl']] : []);
@@ -159,7 +156,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                 ? data['researchPaperUrl']
                 : (data['researchPaperUrl'] != null
                     ? [data['researchPaperUrl']]
-                    : []); // Research paper URL for past papers
+                    : []);
 
             return Card(
               color: const Color.fromARGB(255, 249, 225, 172),
@@ -168,137 +165,118 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
-                  // Wrap with Row
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                        // Use Expanded to take available space
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          heading,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF468F92),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        if (description.isNotEmpty)
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            description,
+                            heading,
                             style: const TextStyle(
-                                fontSize: 18, color: Color(0xFF6C7F93)),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF468F92),
+                            ),
                           ),
-                        if (link.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: InkWell(
-                              onTap: () async {
-                                // Make onTap async
-                                final Uri uri = Uri.parse(link);
-                                bool canLaunch = await canLaunchUrl(
-                                    uri); // Capture canLaunchUrl result
-                                // Print to debug console
-                                if (canLaunch) {
-                                  launchUrl(uri);
-                                } else {
-                                  showSnackBar(
-                                      context, 'Could not launch URL: $link');
-                                }
-                              },
-                              child: Text(
-                                'Published Link: $link',
-                                style: const TextStyle(
-                                    color: Color(0XFF90AE85),
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold),
+                          const SizedBox(height: 8),
+                          if (description.isNotEmpty)
+                            Text(
+                              description,
+                              style: const TextStyle(
+                                  fontSize: 18, color: Color(0xFF6C7F93)),
+                            ),
+                          if (link.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: InkWell(
+                                onTap: () async {
+                                  final Uri uri = Uri.parse(link);
+                                  bool canLaunchURL = await canLaunchUrl(uri);
+                                  if (canLaunchURL) {
+                                    launchUrl(uri);
+                                  } else {
+                                    showSnackBar(context, 'Could not launch URL: $link');
+                                  }
+                                },
+                                child: Text(
+                                  'Published Link: $link',
+                                  style: const TextStyle(
+                                      color: Color(0XFF90AE85),
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
-                          ),
-                        if (documentUrls.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (var docUrl in documentUrls)
-                                  if (docUrl != null &&
-                                      docUrl.toString().isNotEmpty)
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 4.0),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          // Make onTap async
-                                          final Uri uri =
-                                              Uri.parse(docUrl.toString());
-                                          bool canLaunch = await canLaunchUrl(
-                                              uri); // Capture canLaunchUrl result
-                                          // Print to debug console
-                                          if (canLaunch) {
-                                            launchUrl(uri);
-                                          } else {
-                                            showSnackBar(context,
-                                                'Could not launch URL: $docUrl');
-                                          }
-                                        },
-                                        child: Text(
-                                          'Supporting Document ${documentUrls.indexOf(docUrl) + 1}: View Document',
-                                          style: const TextStyle(
-                                              color: Color(0XFF799ACC),
-                                              fontWeight: FontWeight.bold,
-                                              decoration:
-                                                  TextDecoration.underline),
+                          if (documentUrls.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (var docUrl in documentUrls)
+                                    if (docUrl != null &&
+                                        docUrl.toString().isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 4.0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            final Uri uri = Uri.parse(docUrl.toString());
+                                            bool canLaunchURL = await canLaunchUrl(uri);
+                                            if (canLaunchURL) {
+                                              launchUrl(uri);
+                                            } else {
+                                              showSnackBar(context, 'Could not launch URL: $docUrl');
+                                            }
+                                          },
+                                          child: Text(
+                                            'Supporting Document ${documentUrls.indexOf(docUrl) + 1}: View Document',
+                                            style: const TextStyle(
+                                                color: Color(0XFF799ACC),
+                                                fontWeight: FontWeight.bold,
+                                                decoration: TextDecoration.underline),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        if (researchPaperUrls.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (var paperUrl in researchPaperUrls)
-                                  if (paperUrl != null &&
-                                      paperUrl.toString().isNotEmpty)
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 4.0),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          // Make onTap async
-                                          final Uri uri =
-                                              Uri.parse(paperUrl.toString());
-                                          bool canLaunch = await canLaunchUrl(
-                                              uri); // Capture canLaunchUrl result
-
-                                          if (canLaunch) {
-                                            launchUrl(uri);
-                                          } else {
-                                            showSnackBar(context,
-                                                'Could not launch URL: $paperUrl');
-                                          }
-                                        },
-                                        child: Text(
-                                          'Research Paper Document ${researchPaperUrls.indexOf(paperUrl) + 1}: View Document',
-                                          style: const TextStyle(
-                                              color: Color(0XFF799ACC),
-                                              fontWeight: FontWeight.bold,
-                                              decoration:
-                                                  TextDecoration.underline),
+                          if (researchPaperUrls.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (var paperUrl in researchPaperUrls)
+                                    if (paperUrl != null &&
+                                        paperUrl.toString().isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 4.0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            final Uri uri = Uri.parse(paperUrl.toString());
+                                            bool canLaunchURL = await canLaunchUrl(uri);
+                                            if (canLaunchURL) {
+                                              launchUrl(uri);
+                                            } else {
+                                              showSnackBar(context, 'Could not launch URL: $paperUrl');
+                                            }
+                                          },
+                                          child: Text(
+                                            'Research Paper Document ${researchPaperUrls.indexOf(paperUrl) + 1}: View Document',
+                                            style: const TextStyle(
+                                                color: Color(0XFF799ACC),
+                                                fontWeight: FontWeight.bold,
+                                                decoration: TextDecoration.underline),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                      ],
-                    )),
+                        ],
+                      ),
+                    ),
                     PopupMenuButton<String>(
                       color: const Color.fromARGB(255, 255, 217, 134),
                       icon: const Icon(Icons.more_vert),
@@ -306,57 +284,42 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         if (value == 'edit') {
                           _showEditDialog(context, document, researchType);
                         } else if (value == 'delete') {
-                          // Show confirmation dialog before deletion
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: const Text('Confirm Deletion'),
-                                content: const Text(
-                                    'Are you sure you want to delete this research paper?'),
+                                content: const Text('Are you sure you want to delete this research paper?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(); // Cancel deletion
+                                      Navigator.of(context).pop(); // Cancel deletion
                                     },
                                     child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      Navigator.of(context)
-                                          .pop(); // Dismiss the dialog
+                                      Navigator.of(context).pop(); // Dismiss the dialog
                                       String? studentId = auth.currentUser?.uid;
                                       if (studentId != null) {
-                                        // Determine which file URL to delete based on research type
                                         List<String>? fileUrls;
                                         List<String>? researchPaperFileUrls;
-
                                         if (researchType == "current") {
-                                          fileUrls = documentUrls
-                                              .map((url) => url.toString())
-                                              .toList();
-                                          researchPaperFileUrls =
-                                              []; // No research paper URLs for current
+                                          fileUrls = documentUrls.map((url) => url.toString()).toList();
+                                          researchPaperFileUrls = []; // No research paper URLs for current
                                         } else if (researchType == "past") {
-                                          researchPaperFileUrls =
-                                              researchPaperUrls
-                                                  .map((url) => url.toString())
-                                                  .toList();
-                                          fileUrls =
-                                              []; // No document URLs for past
+                                          researchPaperFileUrls = researchPaperUrls.map((url) => url.toString()).toList();
+                                          fileUrls = []; // No supporting document URLs for past
                                         }
                                         await _deleteResearchPaper(
                                           studentId: studentId,
                                           researchType: researchType,
                                           heading: heading,
                                           documentUrlsToDelete: fileUrls ?? [],
-                                          researchPaperUrlsToDelete:
-                                              researchPaperFileUrls ?? [],
+                                          researchPaperUrlsToDelete: researchPaperFileUrls ?? [],
                                         );
                                       } else {
-                                        showSnackBar(context,
-                                            "Error: User not authenticated.");
+                                        showSnackBar(context, "Error: User not authenticated.");
                                       }
                                     },
                                     child: const Text('Yes, Delete'),
@@ -367,8 +330,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                           );
                         }
                       },
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<String>>[
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                         const PopupMenuItem<String>(
                           value: 'edit',
                           child: ListTile(
@@ -395,45 +357,32 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
     );
   }
 
-  void _showEditDialog(BuildContext context,
-      DocumentSnapshot<Map<String, dynamic>> document, String researchType) {
+  void _showEditDialog(BuildContext context, DocumentSnapshot<Map<String, dynamic>> document, String researchType) {
     // Get current field values
     String currentHeading = document.data()?['heading'] ?? '';
     String currentDescription = document.data()?['description'] ?? '';
     String currentLink = document.data()?['link'] ?? '';
 
     // Fetch lists of URLs, handling null and non-list cases
-    List<dynamic> currentDocumentUrlsDynamic =
-        document.data()?['documentUrl'] ?? [];
-    List<dynamic> currentResearchPaperUrlsDynamic =
-        document.data()?['researchPaperUrl'] ?? [];
+    List<dynamic> currentDocumentUrlsDynamic = document.data()?['documentUrl'] ?? [];
+    List<dynamic> currentResearchPaperUrlsDynamic = document.data()?['researchPaperUrl'] ?? [];
 
-    // Ensure they are lists of strings, or empty lists if not.
-    List<String> currentDocumentUrls =
-        currentDocumentUrlsDynamic.cast<String>().toList();
-    List<String> currentResearchPaperUrls =
-        currentResearchPaperUrlsDynamic.cast<String>().toList();
+    // Ensure they are lists of strings
+    List<String> currentDocumentUrls = currentDocumentUrlsDynamic.cast<String>().toList();
+    List<String> currentResearchPaperUrls = currentResearchPaperUrlsDynamic.cast<String>().toList();
 
     // Controllers pre-populated with current values
-    TextEditingController editHeadingController =
-        TextEditingController(text: currentHeading);
-    TextEditingController editDescriptionController =
-        TextEditingController(text: currentDescription);
-    TextEditingController editLinkController =
-        TextEditingController(text: currentLink);
+    TextEditingController editHeadingController = TextEditingController(text: currentHeading);
+    TextEditingController editDescriptionController = TextEditingController(text: currentDescription);
+    TextEditingController editLinkController = TextEditingController(text: currentLink);
 
     // Lists to store additional files and their controllers
     List<File> additionalDocumentFiles = [];
     List<File> additionalResearchPaperFiles = [];
 
-    // Initialize controllers for existing document URLs
-    List<TextEditingController> documentUrlControllers = currentDocumentUrls
-        .map((url) => TextEditingController(text: url))
-        .toList();
-    List<TextEditingController> researchPaperUrlControllers =
-        currentResearchPaperUrls
-            .map((url) => TextEditingController(text: url))
-            .toList();
+    // Controllers for existing URLs
+    List<TextEditingController> documentUrlControllers = currentDocumentUrls.map((url) => TextEditingController(text: url)).toList();
+    List<TextEditingController> researchPaperUrlControllers = currentResearchPaperUrls.map((url) => TextEditingController(text: url)).toList();
 
     showDialog(
       context: context,
@@ -447,28 +396,22 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Editable heading
                     TextField(
                       controller: editHeadingController,
                       decoration: const InputDecoration(labelText: 'Heading'),
                     ),
                     const SizedBox(height: 10),
-                    // For 'current' type show description field; for 'past' show link field
                     researchType == 'current'
                         ? TextField(
                             controller: editDescriptionController,
-                            decoration:
-                                const InputDecoration(labelText: 'Description'),
+                            decoration: const InputDecoration(labelText: 'Description'),
                             maxLines: 3,
                           )
                         : TextField(
                             controller: editLinkController,
-                            decoration: const InputDecoration(
-                                labelText: 'Published Link'),
+                            decoration: const InputDecoration(labelText: 'Published Link'),
                           ),
                     const SizedBox(height: 20),
-
-                    // --- Display and Edit Document URLs (Supporting Documents) ---
                     const Text("Supporting Documents:"),
                     ...List.generate(
                         documentUrlControllers.length,
@@ -479,20 +422,15 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                   Expanded(
                                     child: TextFormField(
                                       controller: documentUrlControllers[index],
-                                      decoration: InputDecoration(
-                                          labelText:
-                                              'Document URL ${index + 1}'),
+                                      decoration: InputDecoration(labelText: 'Document URL ${index + 1}'),
                                     ),
                                   ),
-                                  if (documentUrlControllers.length >
-                                      1) // Show delete icon for more than one URL
+                                  if (documentUrlControllers.length > 1)
                                     IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
+                                      icon: const Icon(Icons.delete, color: Colors.red),
                                       onPressed: () {
                                         setState(() {
-                                          documentUrlControllers
-                                              .removeAt(index);
+                                          documentUrlControllers.removeAt(index);
                                         });
                                       },
                                     ),
@@ -505,14 +443,10 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                           documentUrlControllers.add(TextEditingController());
                         });
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallet.headingColor),
-                      child: const Text('Add Supporting Document URL',
-                          style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Pallet.headingColor),
+                      child: const Text('Add Supporting Document URL', style: TextStyle(color: Colors.white)),
                     ),
                     const SizedBox(height: 10),
-
-                    // --- Display and Edit Research Paper URLs ---
                     const Text("Research Paper Documents:"),
                     ...List.generate(
                         researchPaperUrlControllers.length,
@@ -522,22 +456,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                                 children: [
                                   Expanded(
                                     child: TextFormField(
-                                      controller:
-                                          researchPaperUrlControllers[index],
-                                      decoration: InputDecoration(
-                                          labelText:
-                                              'Research Paper URL ${index + 1}'),
+                                      controller: researchPaperUrlControllers[index],
+                                      decoration: InputDecoration(labelText: 'Research Paper URL ${index + 1}'),
                                     ),
                                   ),
-                                  if (researchPaperUrlControllers.length >
-                                      1) // Show delete icon for more than one URL
+                                  if (researchPaperUrlControllers.length > 1)
                                     IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
+                                      icon: const Icon(Icons.delete, color: Colors.red),
                                       onPressed: () {
                                         setState(() {
-                                          researchPaperUrlControllers
-                                              .removeAt(index);
+                                          researchPaperUrlControllers.removeAt(index);
                                         });
                                       },
                                     ),
@@ -547,153 +475,14 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          researchPaperUrlControllers
-                              .add(TextEditingController());
+                          researchPaperUrlControllers.add(TextEditingController());
                         });
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallet.headingColor),
-                      child: const Text('Add Research Paper Document URL',
-                          style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Pallet.headingColor),
+                      child: const Text('Add Research Paper Document URL', style: TextStyle(color: Colors.white)),
                     ),
                     const SizedBox(height: 20),
-
-                    // --- Replace Main File (if needed - purpose unclear from previous code) ---
-                    // (Keep this section if 'Replace File' is meant to replace a single main file)
-                    // The logic for displaying 'Current file', 'File will be deleted', 'Replace File' button can remain mostly same
-                    // Just clarify in comments the purpose of this "Replace File" functionality in the context of multiple URLs.
-
-                    // Display current file (if exists and not marked for deletion)
-                    if (!_deleteExistingFile &&
-                        currentDocumentUrls.isNotEmpty &&
-                        researchType == 'current')
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Current main document: ${currentDocumentUrls.isNotEmpty ? currentDocumentUrls.first.split('/').last : 'No main document'}',
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                //_deleteExistingFile = true; // No need for _deleteExistingFile anymore, handle in update
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    if (!_deleteExistingFile &&
-                        currentResearchPaperUrls.isNotEmpty &&
-                        researchType ==
-                            'past') // Show for past only if existing and not marked for deletion
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Current main research paper: ${currentResearchPaperUrls.isNotEmpty ? currentResearchPaperUrls.first.split('/').last : 'No main research paper'}', // Display first doc as main if exists
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                //_deleteExistingFile = true; // No need for _deleteExistingFile anymore, handle in update
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-
-                    const SizedBox(height: 10),
-                    if (researchType == 'current')
-                      Row(
-                        // Row to contain Replace and Add Document buttons
-                        children: [
-                          Expanded(
-                            // Use Expanded to make buttons share space
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: researchType == 'current'
-                                      ? ['jpg', 'png', 'pdf', 'docx', 'odt']
-                                      : ['pdf', 'docx', 'odt'],
-                                );
-                                if (result != null && result.files.isNotEmpty) {
-                                  setState(() {
-                                    _supportingDocumentFile =
-                                        File(result.files.single.path!);
-                                  });
-                                } else {
-                                  showSnackBar(
-                                      context, 'No document selected.');
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Pallet.headingColor),
-                              child: const Text('Replace Supporting Document',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          ),
-                          const SizedBox(width: 8), // Space between buttons
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: researchType == 'current'
-                                      ? ['jpg', 'png', 'pdf', 'docx', 'odt']
-                                      : ['pdf', 'docx', 'odt'],
-                                );
-                                if (result != null && result.files.isNotEmpty) {
-                                  setState(() {
-                                    additionalDocumentFiles
-                                        .add(File(result.files.single.path!));
-                                  });
-                                } else {
-                                  showSnackBar(context,
-                                      'No additional document selected.');
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Pallet.headingColor),
-                              child: const Text('Add Supporting Document',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    if (researchType == 'past')
-                      ElevatedButton(
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: researchType == 'current'
-                                ? ['jpg', 'png', 'pdf', 'docx', 'odt']
-                                : ['pdf', 'docx', 'odt'],
-                          );
-                          if (result != null && result.files.isNotEmpty) {
-                            setState(() {
-                              _researchPaperFile =
-                                  File(result.files.single.path!);
-                            });
-                          } else {
-                            showSnackBar(
-                                context, 'No research paper selected.');
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Pallet.headingColor),
-                        child: const Text('Replace Research Paper',
-                            style: TextStyle(color: Colors.white)),
-                      ),
+                    // Optionally, add buttons to replace main files as needed.
                   ],
                 ),
               ),
@@ -711,14 +500,8 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                     User? user = auth.currentUser;
                     if (user != null) {
                       String studentId = user.uid;
-
-                      List<String> updatedDocumentUrls = documentUrlControllers
-                          .map((controller) => controller.text)
-                          .toList();
-                      List<String> updatedResearchPaperUrls =
-                          researchPaperUrlControllers
-                              .map((controller) => controller.text)
-                              .toList();
+                      List<String> updatedDocumentUrls = documentUrlControllers.map((controller) => controller.text).toList();
+                      List<String> updatedResearchPaperUrls = researchPaperUrlControllers.map((controller) => controller.text).toList();
 
                       await _updateResearchPaper(
                         studentId: studentId,
@@ -764,10 +547,11 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
     required List<String> updatedResearchPaperUrls,
   }) async {
     try {
+      // Use the new Firestore path for research paper
       CollectionReference researchCollection = firestore
-          .collection('students')
+          .collection('research paper')
           .doc(studentId)
-          .collection('researchPapers');
+          .collection(researchType);
 
       Map<String, dynamic> updateData = {
         'heading': heading,
@@ -783,14 +567,12 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
       // Handle new supporting document file upload for 'current' type
       if (researchType == 'current' && newSupportingDocumentFile != null) {
-        String fileName =
-            'supporting_doc_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        String fileName = 'supporting_doc_${DateTime.now().millisecondsSinceEpoch}.pdf';
         Reference storageReference = storage.ref().child(
             'students/$studentId/research_papers/$researchType/$fileName');
         await storageReference.putFile(newSupportingDocumentFile);
         String downloadURL = await storageReference.getDownloadURL();
-
-        finalDocumentUrls.clear(); // Replace existing main doc
+        finalDocumentUrls.clear(); // Replace existing main document
         finalDocumentUrls.add(downloadURL);
       }
       // Upload additional supporting documents
@@ -803,17 +585,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
         await storageReference.putFile(docFile);
         addedDocumentUrls.add(await storageReference.getDownloadURL());
       }
-      finalDocumentUrls.addAll(addedDocumentUrls); // Add new docs to existing
+      finalDocumentUrls.addAll(addedDocumentUrls);
 
       // Handle new research paper file upload for 'past' type
       if (researchType == 'past' && newResearchPaperFile != null) {
-        String fileName =
-            'research_paper_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        String fileName = 'research_paper_${DateTime.now().millisecondsSinceEpoch}.pdf';
         Reference storageReference = storage.ref().child(
             'students/$studentId/research_papers/$researchType/$fileName');
         await storageReference.putFile(newResearchPaperFile);
         String downloadURL = await storageReference.getDownloadURL();
-        finalResearchPaperUrls.clear(); //Replace existing research paper
+        finalResearchPaperUrls.clear(); // Replace existing research paper
         finalResearchPaperUrls.add(downloadURL);
       }
 
@@ -822,7 +603,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
 
       await researchCollection.doc(documentId).update(updateData);
       showSnackBar(context, 'Research paper updated successfully!');
-      _loadResearchPapers(); // Reload research papers to reflect changes
+      _loadResearchPapers();
     } catch (e) {
       showSnackBar(context, 'Error updating research paper: $e');
     }
@@ -836,17 +617,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
     required List<String> researchPaperUrlsToDelete,
   }) async {
     try {
+      // Use the new Firestore path for deletion
       CollectionReference researchCollection = firestore
-          .collection('students')
+          .collection('research paper')
           .doc(studentId)
-          .collection('researchPapers');
+          .collection(researchType);
 
-      // Query to find the document with the given heading (and optionally type)
       QuerySnapshot querySnapshot =
           await researchCollection.where('heading', isEqualTo: heading).get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        // Assuming heading is unique, take the first document
         DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
         String documentId = documentSnapshot.id;
 
@@ -867,7 +647,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
         // Delete document from Firestore
         await researchCollection.doc(documentId).delete();
         showSnackBar(context, 'Research paper deleted successfully!');
-        _loadResearchPapers(); // Reload research papers
+        _loadResearchPapers();
       } else {
         showSnackBar(context, 'Research paper not found.');
       }
@@ -881,7 +661,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
     return firestore
         .collection('research paper')
         .doc(studentId)
-        .collection(type) // Access the 'current' or 'past' subcollection
+        .collection(type)
         .snapshots();
   }
 
@@ -899,8 +679,7 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     DropdownButtonFormField<String>(
-                      decoration:
-                          const InputDecoration(labelText: "Research Type"),
+                      decoration: const InputDecoration(labelText: "Research Type"),
                       value: _selectedOption,
                       items: const [
                         DropdownMenuItem(
@@ -933,21 +712,18 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                     if (_selectedOption == "current")
                       TextField(
                         controller: _descriptionController,
-                        decoration:
-                            const InputDecoration(labelText: 'Description'),
+                        decoration: const InputDecoration(labelText: 'Description'),
                         maxLines: 3,
                       ),
                     if (_selectedOption == "past")
                       TextField(
                         controller: _linkController,
-                        decoration: const InputDecoration(
-                            labelText: 'Published Link (if any)'),
+                        decoration: const InputDecoration(labelText: 'Published Link (if any)'),
                       ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
-                        FilePickerResult? result =
-                            await FilePicker.platform.pickFiles(
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(
                           type: FileType.custom,
                           allowedExtensions: _selectedOption == 'current'
                               ? ['jpg', 'png', 'pdf', 'docx', 'odt']
@@ -956,19 +732,16 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         if (result != null && result.files.isNotEmpty) {
                           setState(() {
                             if (_selectedOption == 'current') {
-                              _supportingDocumentFile =
-                                  File(result.files.single.path!);
+                              _supportingDocumentFile = File(result.files.single.path!);
                             } else {
-                              _researchPaperFile =
-                                  File(result.files.single.path!);
+                              _researchPaperFile = File(result.files.single.path!);
                             }
                           });
                         } else {
                           showSnackBar(context, 'No file selected.');
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallet.headingColor),
+                      style: ElevatedButton.styleFrom(backgroundColor: Pallet.headingColor),
                       child: Text(
                         _selectedOption == 'current'
                             ? 'Upload Supporting Document'
@@ -976,18 +749,15 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
-                    if (_selectedOption == 'current' &&
-                        _supportingDocumentFile != null)
+                    if (_selectedOption == 'current' && _supportingDocumentFile != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                            'Selected Document: ${_supportingDocumentFile!.path.split('/').last}'),
+                        child: Text('Selected Document: ${_supportingDocumentFile!.path.split('/').last}'),
                       ),
                     if (_selectedOption == 'past' && _researchPaperFile != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                            'Selected Research Paper: ${_researchPaperFile!.path.split('/').last}'),
+                        child: Text('Selected Research Paper: ${_researchPaperFile!.path.split('/').last}'),
                       ),
                   ],
                 ),
@@ -1014,16 +784,12 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                       return;
                     }
 
-                    if (_selectedOption == 'current' &&
-                        _supportingDocumentFile == null) {
-                      showSnackBar(
-                          context, "Please upload supporting document.");
+                    if (_selectedOption == 'current' && _supportingDocumentFile == null) {
+                      showSnackBar(context, "Please upload supporting document.");
                       return;
                     }
-                    if (_selectedOption == 'past' &&
-                        _researchPaperFile == null) {
-                      showSnackBar(
-                          context, "Please upload research paper document.");
+                    if (_selectedOption == 'past' && _researchPaperFile == null) {
+                      showSnackBar(context, "Please upload research paper document.");
                       return;
                     }
 
@@ -1043,35 +809,30 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             'students/$studentId/research_papers/$_selectedOption/$fileName');
                         try {
                           await storageReference.putFile(fileToUpload);
-                          String downloadURL =
-                              await storageReference.getDownloadURL();
+                          String downloadURL = await storageReference.getDownloadURL();
 
+                          // Use the new Firestore path for research paper
                           CollectionReference researchCollection = firestore
-                              .collection('students')
+                              .collection('research paper')
                               .doc(studentId)
-                              .collection('researchPapers');
+                              .collection(_selectedOption!);
 
                           Map<String, dynamic> researchData = {
                             'type': _selectedOption,
                             'heading': _headingController.text,
-                            'documentUrl': _selectedOption == 'current'
-                                ? [downloadURL]
-                                : [],
-                            'researchPaperUrl':
-                                _selectedOption == 'past' ? [downloadURL] : [],
+                            'documentUrl': _selectedOption == 'current' ? [downloadURL] : [],
+                            'researchPaperUrl': _selectedOption == 'past' ? [downloadURL] : [],
                           };
                           if (_selectedOption == 'current') {
-                            researchData['description'] =
-                                _descriptionController.text;
+                            researchData['description'] = _descriptionController.text;
                           }
                           if (_selectedOption == 'past') {
                             researchData['link'] = _linkController.text;
                           }
 
                           await researchCollection.add(researchData);
-                          showSnackBar(
-                              context, 'Research paper uploaded successfully!');
-                          _loadResearchPapers(); // Reload research papers
+                          showSnackBar(context, 'Research paper uploaded successfully!');
+                          _loadResearchPapers();
 
                           // Clear controllers and selected files
                           _headingController.clear();
@@ -1083,13 +844,11 @@ class _StudentResearchPaperState extends State<StudentResearchPaper> {
                             _selectedOption = null;
                           });
                         } catch (error) {
-                          showSnackBar(context,
-                              'Error uploading research paper: $error');
+                          showSnackBar(context, 'Error uploading research paper: $error');
                         }
                       }
                     } else {
-                      showSnackBar(
-                          context, "User not authenticated. Please sign in.");
+                      showSnackBar(context, "User not authenticated. Please sign in.");
                     }
                   },
                   child: const Text("Upload"),
